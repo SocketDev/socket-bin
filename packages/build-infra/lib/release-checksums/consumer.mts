@@ -35,34 +35,41 @@ export interface ChecksumsResult {
 
 const checksumCache = new Map<string, ChecksumsResult>()
 
+/**
+ * Clear the checksum cache. Useful for testing or forcing re-download.
+ */
+export function clearChecksumCache(): void {
+  checksumCache.clear()
+}
+
 interface GetChecksumsOptions {
   /**
    * The producing repo whose releases we're verifying against.
    */
   repoConfig: RepoConfig
   /**
-   * Tool name prefix used in the producing repo's release tag (e.g. `iocraft`).
+   * Tool name prefix used in the producing repo's release tag (e.g. `lief`).
    */
   tool: string
   /**
    * Specific tag to fetch. If omitted, uses the embedded tag, then `latest`.
    */
-  releaseTag?: string
+  releaseTag?: string | undefined
   /**
    * Where to cache the downloaded `checksums.txt`. Defaults to
    * `<cwd>/build/temp`.
    */
-  tempDir?: string
+  tempDir?: string | undefined
   /**
    * Suppress info/warn logging (errors still log).
    */
-  quiet?: boolean
+  quiet?: boolean | undefined
   /**
    * If true (default), use embedded checksums when available even if a network
    * fetch could find newer ones. Set false to force a network fetch — useful
    * when bumping checksums.
    */
-  preferEmbedded?: boolean
+  preferEmbedded?: boolean | undefined
 }
 
 /**
@@ -207,11 +214,4 @@ export async function getReleaseChecksums(
     }
     return { checksums: {}, source: 'network', tag }
   }
-}
-
-/**
- * Clear the checksum cache. Useful for testing or forcing re-download.
- */
-export function clearChecksumCache(): void {
-  checksumCache.clear()
 }
