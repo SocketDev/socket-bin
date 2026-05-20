@@ -26,6 +26,8 @@ FLEET_REPOS_FILE="$SCRIPT_DIR/fleet-repos.txt"
 PROJECTS="${PROJECTS:-$HOME/projects}"
 # socket-hook: allow cross-repo
 WH_SCRIPT="${PROJECTS}/socket-wheelhouse/scripts/sync-scaffolding/cli.mts"
+# socket-hook: allow cross-repo
+CLEANUP_SCRIPT="${PROJECTS}/socket-wheelhouse/scripts/cascade-tooling/cleanup-stranded.mts"
 
 # Prepend the active Node version's bin dir to PATH so the `node` invoked by
 # the wheelhouse CLI matches the operator's expected toolchain (avoids the
@@ -44,6 +46,8 @@ if [ ! -f "$WH_SCRIPT" ]; then
   echo "set PROJECTS=<dir containing socket-wheelhouse> before retrying" >&2
   exit 2
 fi
+# CLEANUP_SCRIPT is optional — older wheelhouse checkouts won't have it.
+# When missing, skip auto-cleanup; the cascade still runs.
 
 RESULTS=()
 LOG_FILE="/tmp/cascade-${TEMPLATE_SHA}.log"
@@ -53,15 +57,46 @@ echo "══ Cascade ${TEMPLATE_SHA} ══"
 echo "Log: $LOG_FILE"
 echo
 
+# Resolve a canonical fleet repo name to a local primary checkout.
+# Mirrors scripts/sync-scaffolding/discover.mts directoryAliasesFor():
+# canonical `socket-<x>` also resolves to `~/projects/<x>/`; canonical
+# `<x>` (no socket- prefix — sdxgen, stuie, ultrathink) also resolves
+# to `~/projects/socket-<x>/`. First primary checkout wins. Echoes
+# the resolved absolute path, or empty when no primary checkout exists.
+resolveLocalCheckout() {
+  local canonical="$1"
+  local candidate
+  # Exact canonical name first.
+  candidate="${PROJECTS}/${canonical}"
+  if [ -d "${candidate}/.git" ]; then
+    echo "$candidate"
+    return 0
+  fi
+  # Alias: socket-<x> ⇄ <x>.
+  case "$canonical" in
+    socket-*)
+      candidate="${PROJECTS}/${canonical#socket-}"
+      ;;
+    *)
+      candidate="${PROJECTS}/socket-${canonical}"
+      ;;
+  esac
+  if [ -d "${candidate}/.git" ]; then
+    echo "$candidate"
+    return 0
+  fi
+  return 1
+}
+
 while IFS= read -r repo; do
   [ -z "$repo" ] && continue
   case "$repo" in '#'*) continue ;; esac
 
-  src="${PROJECTS}/${repo}"
+  src="$(resolveLocalCheckout "$repo")"
   wt="/tmp/cascade-${repo}-$$"
   echo "── ${repo} ──"
 
-  if [ ! -d "${src}/.git" ]; then
+  if [ -z "$src" ]; then
     RESULTS+=("${repo}|skip:no-git")
     continue
   fi
@@ -76,6 +111,17 @@ while IFS= read -r repo; do
   base="${base:-main}"
 
   git fetch origin "$base" --quiet
+
+  # Auto-clean stranded cascade artifacts from earlier waves. Safety
+  # rails inside the script bail the repo (no-op) if anything looks
+  # ambiguous; only removes commits matching the cascade subject regex,
+  # authored by a trusted identity, touching only cascade-allowlisted
+  # files, and whose template SHA strictly precedes origin's current
+  # cascade SHA.
+  if [ -f "$CLEANUP_SCRIPT" ]; then
+    node "$CLEANUP_SCRIPT" --target "$src" 2>&1 | tail -3 || true
+  fi
+
   branch="chore/sync-${TEMPLATE_SHA}"
 
   git worktree remove --force "$wt" 2>/dev/null
