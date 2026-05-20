@@ -1,0 +1,95 @@
+name: 🚀 Cross-org publish
+
+# Bespoke socket-bin publish pipeline for cross-org CLI tails. Reads the
+# repo's source-allowlist.mts to authorize a (source-repo, release-tag) pair,
+# downloads the release artifacts via `gh release download`, verifies their
+# attestations against the allowlist row's signer-workflow, extracts each
+# triplet's archive into its `packages/<prefix><triplet>/` directory, stamps
+# the version, and (unless dry-run) `npm publish --provenance` per tail.
+#
+# Trust layers (every successful run requires ALL):
+#   1. Allowlist match — entry in scripts/source-allowlist.mts.
+#   2. Tag conformance — release tag matches the row's tagPattern.
+#   3. SHA256SUMS attested — `gh attestation verify` succeeds.
+#   4. Per-archive attested — same, for each downloaded tarball.
+#   5. Tarball SHA matches SHA256SUMS — local recomputation.
+#   6. Manifest name conformance — extracted package.json's `name` is exactly
+#      `<targetScope>/<namePrefix><triplet>`.
+#
+# Bypass: this workflow accepts a `dry-run` input to satisfy
+# release-workflow-guard. The default is true. A real publish requires
+# `Allow workflow-dispatch bypass: publish-cross-org` typed verbatim in the
+# session that runs `gh workflow run … -f dry-run=false`.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source-repo:
+        description: 'GitHub <owner>/<repo> hosting the release artifacts (must match an allowlist row)'
+        required: true
+        type: string
+      release-tag:
+        description: 'Release tag in source-repo (must match the row''s tagPattern)'
+        required: true
+        type: string
+      dry-run:
+        description: 'Stage + verify only; skip npm publish (default: true)'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: read
+
+jobs:
+  cross-org-publish:
+    name: Stage + (optionally) publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0 (2025-08-15)
+
+      - name: Setup + install
+        uses: SocketDev/socket-registry/.github/actions/setup-and-install@c4b120c34fa95a9974ffb3f407fa58f4d167c844 # main (2026-06-01)
+
+      - name: Stage + publish
+        env:
+          SOURCE_REPO: ${{ inputs.source-repo }}
+          RELEASE_TAG: ${{ inputs.release-tag }}
+          DRY_RUN: ${{ inputs.dry-run }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Auth is trusted-publishing only: `npm publish --provenance`
+          # mints an OIDC token from this workflow's `id-token: write`
+          # permission and npm verifies against the package's trusted-
+          # publisher config (configured per-package on npmjs.com,
+          # pointing at SocketDev/socket-bin + this workflow path).
+          # No NPM_TOKEN env on purpose — a long-lived token would
+          # widen the trust gate.
+        run: node scripts/publish-cross-org.mts
+
+      - name: Summarize publish
+        if: always()
+        env:
+          # Bind event-controlled inputs to env vars instead of
+          # interpolating ${{ inputs.* }} directly into the run: shell —
+          # GitHub expands those before bash runs, so a dispatcher could
+          # smuggle shell metacharacters (template injection). job.status is
+          # a trusted GitHub context, so it stays inline.
+          SOURCE_REPO: ${{ inputs.source-repo }}
+          RELEASE_TAG: ${{ inputs.release-tag }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          {
+            echo "## socket-bin cross-org publish"
+            echo ""
+            echo "| Input | Value |"
+            echo "| --- | --- |"
+            echo "| source-repo | \`${SOURCE_REPO}\` |"
+            echo "| release-tag | \`${RELEASE_TAG}\` |"
+            echo "| dry-run | \`${DRY_RUN}\` |"
+            echo "| result | ${{ job.status }} |"
+          } >> "$GITHUB_STEP_SUMMARY"

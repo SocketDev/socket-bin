@@ -1,0 +1,73 @@
+{
+  "name": "socket-bin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "SEA-packed binaries for @socketbin/* packages. Downloads prebuilt artifacts from socket-btm GH Releases, verifies checksums, publishes to npm.",
+  "homepage": "https://github.com/SocketDev/socket-bin",
+  "license": "MIT",
+  "author": {
+    "name": "Socket Inc",
+    "email": "eng@socket.dev",
+    "url": "https://socket.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SocketDev/socket-bin.git"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "echo 'no build — publish-only repo'",
+    "check": "node scripts/fleet/check.mts",
+    "check:paths": "node scripts/fleet/check/paths-are-canonical.mts",
+    "clean": "node scripts/clean.mts",
+    "cover": "node scripts/fleet/cover.mts",
+    "fix": "node scripts/fleet/fix.mts",
+    "format": "oxfmt -c .config/fleet/oxfmtrc.json --write .",
+    "format:check": "oxfmt -c .config/fleet/oxfmtrc.json --check .",
+    "lint": "node scripts/fleet/lint.mts",
+    "prepare": "node scripts/fleet/install-git-hooks.mts && node scripts/fleet/install-git-hooks.mts",
+    "publish": "node scripts/fleet/publish.mts",
+    "publish:ci": "node scripts/fleet/publish.mts --tag ${DIST_TAG:-latest}",
+    "publish:cross-org": "node scripts/publish-cross-org.mts",
+    "publish:dry": "node scripts/fleet/publish.mts --dry-run",
+    "security": "node scripts/fleet/security.mts",
+    "setup": "node .claude/hooks/fleet/setup-security-tools/index.mts",
+    "test": "node scripts/fleet/test.mts",
+    "type": "tsgo --noEmit -p tsconfig.check.json",
+    "update": "node scripts/fleet/update.mts",
+    "lockstep": "node scripts/fleet/lockstep.mts",
+    "lockstep:emit-schema": "node scripts/fleet/lockstep-emit-schema.mts",
+    "setup-security-tools": "node .claude/hooks/fleet/setup-security-tools/install.mts",
+    "ci:local": "node scripts/fleet/agent-ci-skip-locks.mts run --all --quiet --pause-on-failure --github-token",
+    "weekly-update": "node scripts/fleet/weekly-update.mts",
+    "weekly-update:ci": "node scripts/fleet/weekly-update-workflow.mts run"
+  },
+  "devDependencies": {
+    "@redwoodjs/agent-ci": "catalog:",
+    "@sinclair/typebox": "catalog:",
+    "@socketregistry/packageurl-js": "catalog:",
+    "@socketregistry/packageurl-js-stable": "catalog:",
+    "@socketsecurity/lib": "catalog:",
+    "@socketsecurity/lib-stable": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "build-infra": "workspace:*",
+    "ecc-agentshield": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "taze": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=18.20.8",
+    "pnpm": ">=11.6.0"
+  },
+  "packageManager": "pnpm@11.6.0",
+  "allowScripts": {
+    "cpu-features": false,
+    "esbuild": true,
+    "protobufjs": false,
+    "ssh2": false
+  }
+}

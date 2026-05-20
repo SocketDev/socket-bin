@@ -1,0 +1,168 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SocketDev/socket-btm/main/packages/build-infra/lib/external-tools-schema.json",
+  "description": "External tools required to build + release this repo. The canonical schema lives at socket-btm/packages/build-infra/lib/external-tools-schema.json; every fleet repo references it via the $schema field above so validators pick up the single source of truth. Extend the `tools` map with repo-specific entries (e.g. language toolchains for sdxgen, git credential helpers for packageurl-js).",
+  "tools": {
+    "git": {
+      "description": "Git CLI — checkout, submodule init, tag signing.",
+      "version": "2.30+",
+      "notes": [
+        "Required: yes (all platforms)",
+        "Preinstalled on macOS (Xcode CLT) and most Linux distros",
+        "Windows: https://git-scm.com/download/win or via winget/scoop"
+      ]
+    },
+    "node": {
+      "description": "Node.js — runs the build scripts and TypeScript stripping.",
+      "version": "25+",
+      "notes": [
+        "Required: yes",
+        "Node 25+ runs .mts files natively with no flag",
+        "Install via volta / nvm / fnm / official installer",
+        "The pinned version lives in .node-version at the repo root"
+      ]
+    },
+    "pnpm": {
+      "description": "pnpm — the fleet's package manager.",
+      "version": "11.0.0",
+      "packageManager": "pnpm",
+      "repository": "github:pnpm/pnpm",
+      "release": "asset",
+      "notes": [
+        "Required: yes",
+        "Bootstrap locally via `corepack enable pnpm` (the version resolves from package.json's packageManager field)",
+        "CI downloads + integrity-verifies the pinned tarball directly"
+      ],
+      "platforms": {
+        "darwin-arm64": {
+          "asset": "pnpm-darwin-arm64.tar.gz",
+          "integrity": "sha256-NiCg/K+B7NOq7M1ZZZGdkNvJE/TQepbhHnyvwseFBUs="
+        },
+        "darwin-x64": {
+          "asset": "pnpm-darwin-x64.tar.gz",
+          "integrity": "sha256-FwF0i3UYfxMzqcYWgnlD/4T/RsxCvswVb/aGS5vQ+Ug="
+        },
+        "linux-arm64": {
+          "asset": "pnpm-linux-arm64.tar.gz",
+          "integrity": "sha256-Hm2H6/1/8WmWb/WzrXG3gLiDxo0+WZh98Qlt/YhT33U="
+        },
+        "linux-x64": {
+          "asset": "pnpm-linux-x64.tar.gz",
+          "integrity": "sha256-m0Ssx3raQPxBtmX94dVzZ6Xr7DG9SxsAWY2u0ZXaPhc="
+        },
+        "win-arm64": {
+          "asset": "pnpm-win32-arm64.zip",
+          "integrity": "sha256-B0a+jpjKGDB40HR1WfDLvTChOlPrF39nR06zxS3CG8g="
+        },
+        "win-x64": {
+          "asset": "pnpm-win32-x64.zip",
+          "integrity": "sha256-WB4iLmIs0MxPCsX4XdDbdrZRF+OxdQeXnYnmP9xo7co="
+        }
+      }
+    },
+    "gh": {
+      "description": "GitHub CLI — workflow dispatch, release downloads, PR creation in weekly-update.",
+      "version": "2.63+",
+      "notes": [
+        "Required: only in workflows that call `gh api` / `gh pr create` (weekly-update, provenance)",
+        "Preinstalled on GitHub-hosted runners",
+        "Local: `brew install gh` / `winget install gh` / `apt install gh`"
+      ]
+    },
+    "zizmor": {
+      "description": "GitHub Actions security linter — audits .github/ for workflow-injection / credential-leak patterns.",
+      "version": "1.23.1",
+      "repository": "github:zizmorcore/zizmor",
+      "release": "asset",
+      "notes": [
+        "Required: CI (blocks merges on medium+ findings)",
+        "Installed by the setup-and-install composite; integrity-verified per platform"
+      ],
+      "platforms": {
+        "darwin-arm64": {
+          "asset": "zizmor-aarch64-apple-darwin.tar.gz",
+          "integrity": "sha256-JjJWG5dMaflSJYwatLdDLVx/kuVVcEFVw6woopEL1xc="
+        },
+        "darwin-x64": {
+          "asset": "zizmor-x86_64-apple-darwin.tar.gz",
+          "integrity": "sha256-idXtQggd2dBDOhC3VF+sQrNfHwMIhcJ4uXErMsZvJZc="
+        },
+        "linux-arm64": {
+          "asset": "zizmor-aarch64-unknown-linux-gnu.tar.gz",
+          "integrity": "sha256-NyXXzXEC5NcIJxhjiffVkwtoeCMpMNCj6wWNfltH5lg="
+        },
+        "linux-x64": {
+          "asset": "zizmor-x86_64-unknown-linux-gnu.tar.gz",
+          "integrity": "sha256-Z6jfChQ1LdgYguFIdmU9CXuZsPT2tv55jtwDIM/yev8="
+        },
+        "win-x64": {
+          "asset": "zizmor-x86_64-pc-windows-msvc.zip",
+          "integrity": "sha256-M8IpP/AoNHIN182LRzSKr7LpWhm9yZPA7KypyASt6So="
+        }
+      }
+    },
+    "sfw-free": {
+      "description": "Socket Firewall (free tier) — malware gate on dep installs.",
+      "version": "1.7.2",
+      "repository": "github:SocketDev/sfw-free",
+      "release": "asset",
+      "notes": [
+        "Used when neither SOCKET_API_KEY (primary) nor SOCKET_API_TOKEN (forward-canonical) is set",
+        "Shims npm/yarn/pnpm so every install call passes through the firewall"
+      ],
+      "platforms": {
+        "darwin-arm64": {
+          "asset": "sfw-free-macos-arm64",
+          "integrity": "sha256-JI+1iOHhon5xkvewefc5/Cmp3mHwutfpCSg2MCLcVkM="
+        },
+        "darwin-x64": {
+          "asset": "sfw-free-macos-x86_64",
+          "integrity": "sha256-pUJ9R51EDwjjeJ+hkbpXWZvmSZcZba9C5n2WT+wDgrQ="
+        },
+        "linux-arm64": {
+          "asset": "sfw-free-linux-arm64",
+          "integrity": "sha256-hKBF5OG7MgzFwNOSnwLlPxmTmLW+BjfohG0C2e8AJ7E="
+        },
+        "linux-x64": {
+          "asset": "sfw-free-linux-x86_64",
+          "integrity": "sha256-k+LZ36JEuCp04BTcJrHGrxi0rewg81JUN4lD21/pFBE="
+        },
+        "win-x64": {
+          "asset": "sfw-free-windows-x86_64.exe",
+          "integrity": "sha256-bTM7TKydfFcS4umWd8pjSsijAg1VDGMIMSxgvql/Cig="
+        }
+      }
+    },
+    "sfw-enterprise": {
+      "description": "Socket Firewall (enterprise tier) — selected when SOCKET_API_KEY (or SOCKET_API_TOKEN) is set.",
+      "version": "1.7.2",
+      "repository": "github:SocketDev/firewall-release",
+      "release": "asset",
+      "notes": [
+        "Used when SOCKET_API_KEY is set (primary, universally supported). SOCKET_API_TOKEN is accepted as the forward-canonical secondary read.",
+        "Same shims as sfw-free, broader ecosystem support (Ruby, .NET, Go on Linux)"
+      ],
+      "platforms": {
+        "darwin-arm64": {
+          "asset": "sfw-macos-arm64",
+          "integrity": "sha256-sc3Dvb0qMWEke9XMIV6zxEqQuH/guACjOImhT2G7DW0="
+        },
+        "darwin-x64": {
+          "asset": "sfw-macos-x86_64",
+          "integrity": "sha256-2iUtKppdDtsnG7dx4NAbnNb6FjW212X2Hv1h7bZznxI="
+        },
+        "linux-arm64": {
+          "asset": "sfw-linux-arm64",
+          "integrity": "sha256-wkp5wn4aAaWbehYMFlkwrgKYFscrFB/PzbL3Pgd0iYo="
+        },
+        "linux-x64": {
+          "asset": "sfw-linux-x86_64",
+          "integrity": "sha256-RIK1LmNnvUYQUZv9V6EE1ZB+yH1TmRQu07s9Ii3h8z0="
+        },
+        "win-x64": {
+          "asset": "sfw-windows-x86_64.exe",
+          "integrity": "sha256-5SrYBqHEG0QPBAmOscfkB4RfA/V0Cmp5AGum/RcgVuw="
+        }
+      }
+    }
+  }
+}
