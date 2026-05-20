@@ -1,0 +1,22 @@
+{
+  "extends": "./.config/tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "declaration": true,
+    "declarationMap": false,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "outDir": "./dist",
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": ".",
+    "sourceMap": false
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/lib/**/*.mts",
+    "packages/*/lib/**/*.ts",
+    "scripts/**/*.mts"
+  ],
+  "exclude": ["**/node_modules/**/*", "**/dist/**/*"]
+}

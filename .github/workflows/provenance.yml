@@ -1,0 +1,50 @@
+name: 📦 Publish
+
+# Dependencies:
+#   - SocketDev/socket-registry/.github/workflows/provenance.yml
+#
+# socket-bin is a publish-only repo. SEA-packed binaries are downloaded
+# from socket-btm's GitHub Releases by scripts/publish.mts at publish
+# time, verified against embedded SHA-256 checksums, then republished
+# under the @socketbin/* scope.
+#
+# No setup-script is needed — packages are static, the publish script
+# pulls binaries on demand.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dist-tag:
+        description: 'npm dist-tag (latest, next, beta, canary, backport, etc.)'
+        required: false
+        default: 'latest'
+        type: string
+      debug:
+        description: 'Enable debug output'
+        required: false
+        default: '0'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      publish-without-sfw:
+        description: 'Publish directly to npm, bypassing Socket firewall shims'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    uses: SocketDev/socket-registry/.github/workflows/provenance.yml@fe3994c0a4b58d0302ca0039603f4535c13aa942 # main
+    with:
+      debug: ${{ inputs.debug }}
+      dist-tag: ${{ inputs.dist-tag }}
+      publish-script: 'publish:ci'
+      publish-without-sfw: ${{ inputs.publish-without-sfw }}
+      use-trusted-publishing: true
+    secrets:
+      SOCKET_API_TOKEN: ${{ secrets.SOCKET_API_TOKEN || secrets.SOCKET_API_KEY }}

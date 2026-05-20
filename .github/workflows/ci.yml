@@ -1,0 +1,28 @@
+name: ⚡ CI
+
+# Dependencies:
+#   - SocketDev/socket-registry/.github/workflows/ci.yml
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Run CI Pipeline
+    uses: SocketDev/socket-registry/.github/workflows/ci.yml@fe3994c0a4b58d0302ca0039603f4535c13aa942 # main
+    with:
+      # Force --all so push/PR runs the full suite. The default `pnpm test`
+      # uses --modified, which is a no-op on a clean CI checkout.
+      test-script: pnpm test --all

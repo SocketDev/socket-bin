@@ -1,0 +1,53 @@
+# OS files
+.DS_Store
+._.DS_Store
+Thumbs.db
+
+# Environment & config
+/.claude/*
+!/.claude/agents/
+!/.claude/commands/
+!/.claude/hooks/
+!/.claude/ops/
+!/.claude/settings.json
+!/.claude/skills/
+/.env
+/.env.local
+/.env.*.local
+/.node-version
+/.nvm
+/.pnpmfile.cjs
+
+# Build artifacts
+/.tap
+/.type-coverage
+/coverage
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Editor files
+/.vscode
+*.swp
+*.swo
+#*#
+.#*
+
+# Cache directories
+**/.cache
+
+# Runtime
+**/node_modules
+
+# Build and temporary
+**/*.tgz
+**/*.tmp
+**/*.tsbuildinfo
+/dist
+
+# Allow specific files
+!/.vscode/extensions.json
+
+# Archive directories
+**/docs/archive/

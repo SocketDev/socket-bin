@@ -1,0 +1,62 @@
+{
+  "name": "socket-bin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "SEA-packed binaries for @socketbin/* packages. Downloads prebuilt artifacts from socket-btm GH Releases, verifies checksums, publishes to npm.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.1.3",
+  "engines": {
+    "node": ">=18.20.8",
+    "pnpm": ">=11.1.3"
+  },
+  "scripts": {
+    "build": "echo 'no build — publish-only repo'",
+    "check": "node scripts/check.mts",
+    "check:paths": "node scripts/check-paths.mts",
+    "clean": "node scripts/clean.mts",
+    "cover": "COVERAGE=true pnpm exec vitest run --coverage --config .config/vitest.config.mts",
+    "fix": "node scripts/fix.mts",
+    "format": "oxfmt -c .config/oxfmtrc.json --write .",
+    "format:check": "oxfmt -c .config/oxfmtrc.json --check .",
+    "lint": "node scripts/lint.mts",
+    "prepare": "node scripts/install-git-hooks.mts",
+    "publish": "node scripts/publish.mts",
+    "publish:ci": "node scripts/publish.mts --tag ${DIST_TAG:-latest}",
+    "publish:dry": "node scripts/publish.mts --dry-run",
+    "security": "node scripts/security.mts",
+    "setup": "node .claude/hooks/setup-security-tools/index.mts",
+    "test": "node scripts/test.mts",
+    "type": "tsgo --noEmit -p tsconfig.check.json",
+    "update": "node scripts/update.mts",
+    "lockstep": "node scripts/lockstep.mts",
+    "lockstep:emit-schema": "node scripts/lockstep-emit-schema.mts",
+    "setup-security-tools": "node .claude/hooks/setup-security-tools/install.mts"
+  },
+  "devDependencies": {
+    "@sinclair/typebox": "catalog:",
+    "@socketregistry/packageurl-js": "catalog:",
+    "@socketregistry/packageurl-js-stable": "catalog:",
+    "@socketsecurity/lib": "catalog:",
+    "@socketsecurity/lib-stable": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "build-infra": "workspace:*",
+    "ecc-agentshield": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "taze": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "author": {
+    "name": "Socket Inc",
+    "email": "eng@socket.dev",
+    "url": "https://socket.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SocketDev/socket-bin.git"
+  },
+  "homepage": "https://github.com/SocketDev/socket-bin"
+}

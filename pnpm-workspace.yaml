@@ -1,0 +1,65 @@
+packages:
+  - packages/*
+  - .claude/hooks/*
+allowBuilds:
+  esbuild: true
+autoInstallPeers: true
+
+blockExoticSubdeps: true
+
+catalog:
+  '@sinclair/typebox': 0.34.49
+  '@socketregistry/packageurl-js': 1.4.2
+  '@socketregistry/packageurl-js-stable': npm:@socketregistry/packageurl-js@1.4.2
+  '@socketsecurity/lib': 5.28.0
+  '@socketsecurity/lib-stable': npm:@socketsecurity/lib@5.28.0
+  '@socketsecurity/registry': 2.0.2
+  '@socketsecurity/registry-stable': npm:@socketsecurity/registry@2.0.2
+  '@socketsecurity/sdk': 4.0.1
+  '@socketsecurity/sdk-stable': npm:@socketsecurity/sdk@4.0.1
+  '@types/mdast': 4.0.4
+  '@types/node': 24.9.2
+  '@typescript/native-preview': 7.0.0-dev.20250926.1
+  '@vitest/coverage-v8': 4.1.6
+  '@vitest/ui': 4.1.6
+  ecc-agentshield: 1.4.0
+  husky: 9.1.7
+  'mdast-util-from-markdown': 2.0.3
+  'micromark': 4.0.2
+  'npm-run-all2': 9.0.0
+  oxfmt: 0.37.0
+  oxlint: 1.52.0
+  taze: 19.9.2
+  typescript: 5.9.2
+  vitest: 4.0.3
+enablePrePostScripts: true
+
+# Force every consumer of Socket's own packages to resolve through the
+# catalog-pinned published versions. The `catalog:` form rewrites
+# `workspace:*`, `^x.y.z`, and bare-version specs alike to the version
+# in the default `catalog:` block above. This defeats accidental
+# local-checkout resolution when a sibling repo is on disk.
+overrides:
+  '@socketregistry/packageurl-js': 'catalog:'
+  '@socketsecurity/lib': 'catalog:'
+  '@socketsecurity/registry': 'catalog:'
+  '@socketsecurity/sdk': 'catalog:'
+
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@socketaddon/*'
+  - '@socketbin/*'
+  - '@socketregistry/*'
+  - '@socketsecurity/*'
+  - '@stuie/*'
+  # Network-mocking lib used in fleet test suites. v15 betas pre-date
+  # npm's `time` field for the major; allow pinned beta until v15 GA.
+  - 'nock@15.0.0-beta.11'
+  - 'npm-run-all2@9.0.0'
+
+pmOnFail: error
+resolutionMode: highest
+saveExact: true
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - 'compromise@14.15.0'
