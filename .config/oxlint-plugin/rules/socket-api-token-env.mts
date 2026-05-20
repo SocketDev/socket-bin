@@ -56,12 +56,27 @@ const rule = {
       : context.sourceCode
 
     function hasBypassComment(node: AstNode) {
-      const before = sourceCode.getCommentsBefore(node)
-      const after = sourceCode.getCommentsAfter(node)
-      for (const c of [...before, ...after]) {
-        if (BYPASS_RE.test(c.value)) {
-          return true
+      // Walk up: literal -> array element -> array/declaration. The bypass
+      // comment can sit on the literal itself OR on any ancestor up to (and
+      // including) the nearest statement. This lets the entire alias-lookup
+      // array carry one bypass instead of needing one per element.
+      let cursor: AstNode | undefined = node
+      while (cursor) {
+        const before = sourceCode.getCommentsBefore(cursor)
+        const after = sourceCode.getCommentsAfter(cursor)
+        for (const c of [...before, ...after]) {
+          if (BYPASS_RE.test(c.value)) {
+            return true
+          }
         }
+        if (
+          cursor.type === 'ExpressionStatement' ||
+          cursor.type === 'VariableDeclaration' ||
+          cursor.type === 'ExportNamedDeclaration'
+        ) {
+          break
+        }
+        cursor = cursor.parent
       }
       return false
     }
