@@ -1,0 +1,44 @@
+name: 🔄 Weekly Update
+
+# Delegator: forwards to the canonical weekly-update reusable in
+# socket-registry. The reusable does npm bumps, lockstep validation,
+# submodule bumps, workflow pin checks, tests, PR creation — every
+# fleet repo uses this same thin shell.
+#
+# To scaffold a new repo from this template:
+# 1. Bump the `@<sha> # main` pin below to the current propagation SHA
+#    (whatever `_local-not-for-reuse-*.yml` in socket-registry pins).
+# 2. Adjust `validate-file-patterns` to include any repo-specific
+#    source globs the /updating skill is allowed to touch. The default
+#    covers npm manifests + submodules + lockstep.json only; repos that
+#    want auto-fixes to extend into source code (e.g. `packages/*/src/**`)
+#    add their own globs.
+# 3. Delete these guidance comments.
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  weekly-update:
+    uses: SocketDev/socket-registry/.github/workflows/weekly-update.yml@1710ff0c384b95e23651b84da9f90f90e7c32e52 # main (2026-05-28)
+    with:
+      # Set to 'true' when the repo tracks submodules.
+      checkout-submodules: 'false'
+      # Adjust test-setup-script to the repo's build command (e.g.
+      # 'pnpm run build' for repos with a build step), or leave as
+      # empty string for test-only projects.
+      test-setup-script: ''
+      test-script: 'pnpm test'
+      # Add repo-specific source globs if /updating should be allowed
+      # to auto-fix source files. Default covers npm + submodules +
+      # lockstep manifest only.
+      validate-file-patterns: 'package.json|*/package.json|pnpm-lock.yaml|*/pnpm-lock.yaml|.npmrc|pnpm-workspace.yaml|.gitmodules|lockstep.json'
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      BOT_GPG_PRIVATE_KEY: ${{ secrets.BOT_GPG_PRIVATE_KEY }}
+      SOCKET_API_TOKEN: ${{ secrets.SOCKET_API_TOKEN || secrets.SOCKET_API_KEY }}

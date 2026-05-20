@@ -1,0 +1,4 @@
+{
+  "$schema": "./release-assets.schema.json",
+  "$comment": "SHA-256 checksums for socket-btm release assets that this repo republishes to npm. Bump the tag + checksums when socket-btm cuts a new release. Empty until first @socketbin/* package ships."
+}
