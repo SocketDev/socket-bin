@@ -3,7 +3,7 @@
 // prefer-async-spawn: streaming-stdio-required — test spawns child
 // subprocess and pipes stdin/stdout/stderr; Node spawn returns the
 // ChildProcess streaming surface the lib promise wrapper does not.
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { spawn } from '@socketsecurity/lib-stable/spawn/spawn'
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -24,6 +24,11 @@ async function runHook(
     stdio: 'pipe',
     env: { ...process.env, ...envOverride },
   })
+  // v6 lib-stable spawn returns an enriched Promise that rejects on
+  // non-zero exit; this test reads stderr + exit via manual listeners
+  // instead. Swallow the Promise rejection so it doesn't race the
+  // listener-based resolve and trigger "async activity after test ended".
+  void child.catch(() => undefined)
   child.stdin!.end(JSON.stringify(payload))
   let stderr = ''
   child.process.stderr!.on('data', chunk => {
@@ -64,17 +69,17 @@ test('Write of small fleet block is allowed', async () => {
   assert.strictEqual(result.code, 0)
 })
 
-test('Write of fleet block at exactly 40KB is allowed', async () => {
+test('Write of fleet block at exactly 48KB is allowed', async () => {
   const result = await runHook({
-    tool_input: { content: fleetBlock(40 * 1024), file_path: 'CLAUDE.md' },
+    tool_input: { content: fleetBlock(48 * 1024), file_path: 'CLAUDE.md' },
     tool_name: 'Write',
   })
   assert.strictEqual(result.code, 0)
 })
 
-test('Write of fleet block over 40KB is blocked', async () => {
+test('Write of fleet block over 48KB is blocked', async () => {
   const result = await runHook({
-    tool_input: { content: fleetBlock(45 * 1024), file_path: 'CLAUDE.md' },
+    tool_input: { content: fleetBlock(53 * 1024), file_path: 'CLAUDE.md' },
     tool_name: 'Write',
   })
   assert.strictEqual(result.code, 2)

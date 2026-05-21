@@ -15,9 +15,10 @@ If no arguments given, audit the canonical fleet repo list:
 - `SocketDev/socket-sdk-js`
 - `SocketDev/socket-sdxgen`
 - `SocketDev/socket-stuie`
+- `SocketDev/socket-vscode`
+- `SocketDev/socket-webext`
 - `SocketDev/socket-wheelhouse`
 - `SocketDev/ultrathink`
-- `SocketDev/vscode-socket-security`
 
 ## Process
 

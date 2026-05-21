@@ -5,7 +5,7 @@
  */
 
 import assert from 'node:assert/strict'
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/spawn/spawn'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -22,7 +22,6 @@ interface RunResult {
 
 function runHook(env: Record<string, string>): RunResult {
   const r = spawnSync('node', [HOOK], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: '{}',
     env: { ...process.env, ...env },
   })
@@ -120,7 +119,6 @@ describe('no-orphaned-staging', () => {
     // Empty stdin would normally drain; verifying the hook doesn't
     // crash on missing-env-vars or other edge cases.
     const r = spawnSync('node', [HOOK], {
-      // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
       input: '',
       env: { ...process.env, CLAUDE_PROJECT_DIR: '/nonexistent/path' },
     })

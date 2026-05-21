@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 // prefer-async-spawn: streaming-stdio-required — test spawns child
 // subprocess and pipes stdin/stdout/stderr; Node spawn returns the
 // ChildProcess streaming surface the lib promise wrapper does not.
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { spawn } from '@socketsecurity/lib-stable/spawn/spawn'
 import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -24,6 +24,11 @@ test('parses without syntax errors (node --check)', async () => {
     const child = spawn(process.execPath, ['--check', SCRIPT], {
       stdio: ['ignore', 'ignore', 'pipe'],
     })
+    // v6 lib-stable spawn returns an enriched Promise that rejects on
+    // non-zero exit; this test reads stderr + exit via manual listeners
+    // instead. Swallow the Promise rejection so it doesn't race the
+    // listener-based resolve and trigger "async activity after test ended".
+    void child.catch(() => undefined)
     let stderr = ''
     child.process.stderr!.on('data', d => {
       stderr += d.toString()
