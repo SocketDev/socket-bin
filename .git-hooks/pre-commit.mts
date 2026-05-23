@@ -19,6 +19,7 @@ import {
   readFileForScan,
   scanAwsKeys,
   scanCrossRepoPaths,
+  scanDocsPnpmFirst,
   scanGitHubTokens,
   scanLoggerLeaks,
   scanNpxDlx,
@@ -217,6 +218,41 @@ const main = (): number => {
     }
   }
 
+  // Documentation pnpm-first scanner (warning, not blocking).
+  //
+  // Fleet rule: user-facing install commands in docs lead with the
+  // pnpm form. npm/yarn fallbacks come after. Block-only — inline
+  // backtick spans are not scanned. Suppress per-block with
+  // `socket-hook: allow pnpm-first`.
+  logger.info('Checking docs lead with pnpm install commands...')
+  for (const file of stagedFiles) {
+    if (shouldSkipFile(file)) {
+      continue
+    }
+    if (!/\.(?:md|mdx)$/i.test(file)) {
+      continue
+    }
+    const text = readFileForScan(file)
+    if (!text) {
+      continue
+    }
+    const hits = scanDocsPnpmFirst(text)
+    if (hits.length > 0) {
+      logger.warn(`docs without pnpm-first install command: ${file}`)
+      for (const h of hits.slice(0, 3)) {
+        logger.info(`${h.lineNumber}: ${h.line.trim()}`)
+        if (h.suggested && h.suggested !== h.line) {
+          logger.info(`     fix: ${h.suggested.trim()}`)
+        }
+      }
+      logger.info(
+        'Lead with the pnpm form; keep npm/yarn as fallbacks. To ' +
+          'suppress a fenced block, include `socket-hook: allow ' +
+          'pnpm-first` anywhere in the block.',
+      )
+    }
+  }
+
   // Direct stream writes (process.stderr.write, process.stdout.write,
   // console.*) in source files. Source code uses getDefaultLogger()
   // from @socketsecurity/lib-stable/logger; the logger-guard PreToolUse hook
@@ -243,7 +279,11 @@ const main = (): number => {
       file.startsWith('template/scripts/') ||
       file.includes('/external/') ||
       file.includes('/vendor/') ||
-      file.includes('/upstream/')
+      file.includes('/upstream/') ||
+      // src/logger/ IS the logger — implementing the surface itself
+      // requires direct console.* calls. Same exemption the
+      // logger-guard PreToolUse hook applies.
+      file.startsWith('src/logger/')
     ) {
       continue
     }

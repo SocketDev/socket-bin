@@ -1,9 +1,9 @@
 /**
- * @file Unit tests for the prefer-spawn-over-execsync oxlint rule.
- *   Spawns the real oxlint binary against fixture files in a tmp
- *   dir (see lib/rule-tester.mts). Skips silently when `oxlint`
- *   isn't on PATH so a fresh-laptop checkout doesn't false-fail
- *   before `pnpm install` materializes the bin link.
+ * @file Unit tests for the prefer-spawn-over-execsync oxlint rule. Spawns the
+ *   real oxlint binary against fixture files in a tmp dir (see
+ *   lib/rule-tester.mts). Skips silently when `oxlint` isn't on PATH so a
+ *   fresh-laptop checkout doesn't false-fail before `pnpm install` materializes
+ *   the bin link.
  */
 
 import { describe, test } from 'node:test'
@@ -17,13 +17,11 @@ describe('socket/prefer-spawn-over-execsync', () => {
       valid: [
         {
           name: 'lib-stable spawn import',
-          code:
-            "import { spawn } from '@socketsecurity/lib-stable/spawn'\n",
+          code: "import { spawn } from '@socketsecurity/lib-stable/spawn/spawn'\n",
         },
         {
           name: 'lib-stable spawnSync import',
-          code:
-            "import { spawnSync } from '@socketsecurity/lib-stable/spawn'\n",
+          code: "import { spawnSync } from '@socketsecurity/lib-stable/spawn/spawn'\n",
         },
         {
           name: 'node:child_process spawn (not exec*Sync) is acceptable',
@@ -41,18 +39,13 @@ describe('socket/prefer-spawn-over-execsync', () => {
         },
         {
           name: 'execFileSync from node:child_process',
-          code:
-            "import { execFileSync } from 'node:child_process'\n",
+          code: "import { execFileSync } from 'node:child_process'\n",
           errors: [{ messageId: 'preferSpawn' }],
         },
         {
           name: 'mixed execSync + execFileSync',
-          code:
-            "import { execSync, execFileSync } from 'node:child_process'\n",
-          errors: [
-            { messageId: 'preferSpawn' },
-            { messageId: 'preferSpawn' },
-          ],
+          code: "import { execSync, execFileSync } from 'node:child_process'\n",
+          errors: [{ messageId: 'preferSpawn' }, { messageId: 'preferSpawn' }],
         },
       ],
     })

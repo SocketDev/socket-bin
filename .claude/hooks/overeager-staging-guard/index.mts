@@ -36,7 +36,7 @@
 //     "tool_input": { "command": "..." },
 //     "transcript_path": "/.../session.jsonl" }
 
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/spawn/spawn'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
@@ -118,9 +118,15 @@ export function detectBroadGitAdd(command: string): string | undefined {
     const rest = tokens.slice(j + 2)
     for (let k = 0, { length } = rest; k < length; k += 1) {
       const arg = rest[k]!
-      if (arg === '--all' || arg === '-A') {return `git add ${arg}`}
-      if (arg === '--update' || arg === '-u') {return `git add ${arg}`}
-      if (arg === '.') {return 'git add .'}
+      if (arg === '--all' || arg === '-A') {
+        return `git add ${arg}`
+      }
+      if (arg === '--update' || arg === '-u') {
+        return `git add ${arg}`
+      }
+      if (arg === '.') {
+        return 'git add .'
+      }
     }
   }
   return undefined
