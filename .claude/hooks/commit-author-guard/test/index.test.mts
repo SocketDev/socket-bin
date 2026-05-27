@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -60,7 +60,6 @@ function runHook(
   extraEnv: Record<string, string> = {},
 ): { stderr: string; exitCode: number } {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify(payload),
     env: { ...process.env, HOME: home, ...extraEnv },
   })
@@ -333,7 +332,6 @@ test('fails open when no canonical email is configured anywhere', () => {
     // fails open; if it's set to the user's real email, this test's
     // imposter email gets blocked. Either way, the hook should not crash.
     const result = spawnSync('node', [HOOK_PATH], {
-      // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
       input: JSON.stringify({
         tool_name: 'Bash',
         tool_input: { command: 'git commit -m "fix"' },

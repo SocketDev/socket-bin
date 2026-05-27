@@ -38,7 +38,7 @@
 // Fails open on every error (exit 0 + stderr log). The hook must
 // not block the conversation on its own bugs.
 
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { existsSync, promises as fs } from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
@@ -88,8 +88,13 @@ export function checkEdition(): Finding[] {
   }
   const isFree = content.includes('sfw-free')
   const isEnt = content.includes('sfw-enterprise')
-  const tokenPresent =
-    !!process.env['SOCKET_API_KEY'] || !!process.env['SOCKET_API_TOKEN']
+  // Setup tooling detects whether a token is present in the raw env; the
+  // keychain-fallback getter would defeat that "is it wired up yet?" check.
+  // socket-api-token-getter: allow direct-env
+  const apiKeyInEnv = !!process.env['SOCKET_API_KEY']
+  // socket-api-token-getter: allow direct-env
+  const apiTokenInEnv = !!process.env['SOCKET_API_TOKEN']
+  const tokenPresent = apiKeyInEnv || apiTokenInEnv
   if (isFree && tokenPresent) {
     return [
       {

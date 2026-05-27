@@ -17,10 +17,11 @@ import os from 'node:os'
 import path from 'node:path'
 import process from 'node:process'
 
-import { which } from '@socketsecurity/lib/bin'
-import { safeDelete } from '@socketsecurity/lib/fs'
-import { getDefaultLogger } from '@socketsecurity/lib/logger'
-import { isSpawnError, spawn } from '@socketsecurity/lib/spawn'
+import { which } from '@socketsecurity/lib/bin/which'
+import { safeDelete } from '@socketsecurity/lib/fs/safe'
+import { getDefaultLogger } from '@socketsecurity/lib/logger/default'
+import { isSpawnError } from '@socketsecurity/lib/process/spawn/errors'
+import { spawn } from '@socketsecurity/lib/process/spawn/child'
 
 const logger = getDefaultLogger()
 
@@ -418,7 +419,7 @@ export function normalizeMarkdown(text: string): string {
     lastNonEmpty--
   }
   const lastIsClosingFence = lines[lastNonEmpty] === '```'
-  if (firstStartsWithUpdated && thirdIsCodeFence && lastIsClosingFence) {
+  if (firstStartsWithUpdated && lastIsClosingFence && thirdIsCodeFence) {
     return lines.slice(3, lastNonEmpty).join('\n').trimEnd() + '\n'
   }
   return text

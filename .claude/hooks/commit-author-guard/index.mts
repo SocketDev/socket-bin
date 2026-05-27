@@ -36,7 +36,7 @@
 // Bypass: type "Allow commit-author bypass" in a recent user message,
 // or set SOCKET_COMMIT_AUTHOR_GUARD_DISABLED=1.
 
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { existsSync, readFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -148,11 +148,7 @@ export function readAllowedAuthors(): AllowedAuthors {
   // Source (b): global git config
   let email: string | undefined
   let name: string | undefined
-  const emailResult = spawnSync('git', [
-    'config',
-    '--global',
-    'user.email',
-  ])
+  const emailResult = spawnSync('git', ['config', '--global', 'user.email'])
   if (emailResult.status === 0) {
     email = String(emailResult.stdout).trim() || undefined
   }

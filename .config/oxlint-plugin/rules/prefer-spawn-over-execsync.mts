@@ -1,7 +1,7 @@
 /**
  * @file Per the fleet "Subprocesses" rule: prefer `spawn` from
- *   `@socketsecurity/lib-stable/spawn` over `execSync` / `execFileSync` from
- *   `node:child_process`. Two reasons:
+ *   `@socketsecurity/lib-stable/process/spawn/child` over `execSync` /
+ *   `execFileSync` from `node:child_process`. Two reasons:
  *
  *   1. Command-injection surface — `execSync(cmd)` runs `cmd` through a shell; any
  *      string concatenation into `cmd` is a potential injection vector.
@@ -24,10 +24,11 @@
  *   - Adjacent comment with `prefer-spawn-over-execsync: required` — for callers
  *     who genuinely need shell expansion (e.g. expanding env vars mid-command).
  *     Rare; document why.
- *   - Files inside `@socketsecurity/lib-stable/spawn` itself — handled at the
- *     .config/oxlintrc.json ignorePatterns level.
+ *   - Files inside `@socketsecurity/lib-stable/process/spawn/child` itself —
+ *     handled at the .config/oxlintrc.json ignorePatterns level.
  */
 
+import { makeBypassChecker } from '../lib/comment-markers.mts'
 import type { AstNode, RuleContext } from '../lib/rule-types.mts'
 
 const CHILD_PROCESS_SPECIFIERS = new Set([
@@ -47,40 +48,22 @@ const rule = {
     type: 'problem',
     docs: {
       description:
-        'Use `spawn` from @socketsecurity/lib-stable/spawn instead of `execSync` / `execFileSync` from node:child_process.',
+        'Use `spawn` from @socketsecurity/lib-stable/process/spawn/child instead of `execSync` / `execFileSync` from node:child_process.',
       category: 'Best Practices',
       recommended: true,
     },
     fixable: undefined,
     messages: {
       importBanned:
-        'Importing `{{name}}` from {{specifier}} — use `spawn` (or `spawnSync` for top-level-sync) from @socketsecurity/lib-stable/spawn. `execSync` runs through a shell (command-injection surface); array-arg `spawn` does not. The lib also ships a typed SpawnError shape — `execSync` errors are plain Errors with no structured fields.',
+        'Importing `{{name}}` from {{specifier}} — use `spawn` (or `spawnSync` for top-level-sync) from @socketsecurity/lib-stable/process/spawn/child. `execSync` runs through a shell (command-injection surface); array-arg `spawn` does not. The lib also ships a typed SpawnError shape — `execSync` errors are plain Errors with no structured fields.',
       callBanned:
-        'Calling `{{obj}}.{{name}}(...)` — use `spawn` from @socketsecurity/lib-stable/spawn instead. Avoids shell-interpolation injection paths; ships consistent SpawnError shape.',
+        'Calling `{{obj}}.{{name}}(...)` — use `spawn` from @socketsecurity/lib-stable/process/spawn/child instead. Avoids shell-interpolation injection paths; ships consistent SpawnError shape.',
     },
     schema: [],
   },
 
   create(context: RuleContext) {
-    const sourceCode = context.getSourceCode
-      ? context.getSourceCode()
-      : context.sourceCode
-
-    function hasBypassComment(node: AstNode): boolean {
-      const before = sourceCode.getCommentsBefore(node)
-      const after = sourceCode.getCommentsAfter(node)
-      for (let i = 0, { length } = before; i < length; i += 1) {
-        if (BYPASS_RE.test(before[i]!.value)) {
-          return true
-        }
-      }
-      for (let i = 0, { length } = after; i < length; i += 1) {
-        if (BYPASS_RE.test(after[i]!.value)) {
-          return true
-        }
-      }
-      return false
-    }
+    const hasBypassComment = makeBypassChecker(context, BYPASS_RE)
 
     return {
       ImportDeclaration(node: AstNode) {
@@ -137,7 +120,7 @@ const rule = {
         if (!objName) {
           return
         }
-        if (!/^(childProcess|child_process|cp)$/.test(objName)) {
+        if (!/^(?:childProcess|child_process|cp)$/.test(objName)) {
           return
         }
         if (hasBypassComment(node)) {

@@ -6,12 +6,12 @@ import assert from 'node:assert/strict'
 // The wrapper isn't adding any security here: nodeBin comes from
 // whichSync (validated path) and the only arg is hookScript (a
 // path we control). Same shape Node's native API has.
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { existsSync, mkdtempSync, promises as fsp, rmSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
-import { whichSync } from '@socketsecurity/lib-stable/bin'
+import { whichSync } from '@socketsecurity/lib-stable/bin/which'
 
 import {
   buildAuditRecords,
@@ -60,9 +60,12 @@ function runHook(
     tool_name: toolName,
     tool_input: toolInput,
   }
-  if (options.transcript_path)
-    {payload['transcript_path'] = options.transcript_path}
-  if (options.session_id) {payload['session_id'] = options.session_id}
+  if (options.transcript_path) {
+    payload['transcript_path'] = options.transcript_path
+  }
+  if (options.session_id) {
+    payload['session_id'] = options.session_id
+  }
   const input = JSON.stringify(payload)
   // Inherit the parent env (so PATH / NODE / etc. work) and only
   // override HOME/USERPROFILE when the test wants an isolated $HOME.
@@ -905,7 +908,6 @@ describe('buildAuditRecords', () => {
     for (let i = 0, { length } = records; i < length; i += 1) {
       const r = records[i]!
       assert.ok(typeof r.repo === 'string' && r.repo.length > 0)
-    
     }
   })
 })
@@ -1040,7 +1042,9 @@ describe('audit log integration', () => {
       )
       assert.equal(r.code, 0, 'unwritable audit must not fail the hook')
     } finally {
-      if (existsSync(home)) {rmSync(home, { force: true })}
+      if (existsSync(home)) {
+        rmSync(home, { force: true })
+      }
     }
   })
 })
