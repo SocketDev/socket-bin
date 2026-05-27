@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -31,7 +31,6 @@ function runHook(
   extraEnv: Record<string, string> = {},
 ): { stderr: string; exitCode: number } {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify({ transcript_path: transcriptPath }),
     env: { ...process.env, ...extraEnv },
   })
@@ -347,7 +346,6 @@ test('disabled env var short-circuits', () => {
 
 test('does not crash on missing transcript_path', () => {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify({}),
   })
   assert.equal(result.status, 0)
@@ -355,7 +353,6 @@ test('does not crash on missing transcript_path', () => {
 
 test('does not crash on malformed payload', () => {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: 'not-json',
   })
   assert.equal(result.status, 0)

@@ -15,8 +15,9 @@ import process, { execPath } from 'node:process'
 import { afterEach, describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { safeDelete } from '@socketsecurity/lib-stable/fs'
-import { isSpawnError, spawn } from '@socketsecurity/lib-stable/spawn'
+import { safeDelete } from '@socketsecurity/lib-stable/fs/safe'
+import { isSpawnError } from '@socketsecurity/lib-stable/process/spawn/errors'
+import { spawn } from '@socketsecurity/lib-stable/process/spawn/child'
 
 const hookScript = new URL('../index.mts', import.meta.url).pathname
 
@@ -175,6 +176,26 @@ describe('release-workflow-guard hook', () => {
     it('gh workflow run after a chained &&', async () => {
       const r = await runHook('git fetch && gh workflow run release.yml')
       assert.equal(r.code, 2)
+    })
+
+    it('gh workflow run with value flags BEFORE the target', async () => {
+      // Parser skips each value-taking flag + its value, so the target
+      // is found wherever it sits in the arg list.
+      const r = await runHook(
+        'gh workflow run --ref main -f mode=prod release.yml',
+      )
+      assert.equal(r.code, 2)
+      assert.match(r.stderr, /release\.yml/)
+    })
+
+    it('blocks an obfuscated `$(echo gh) workflow run` dispatch', async () => {
+      // shell-quote strands `workflow` as the binary when `gh` is
+      // produced by a substitution. The guard treats that shape as a
+      // dispatch too — a security guard must block-the-default on an
+      // obfuscated `gh`, not wave it through.
+      const r = await runHook('$(echo gh) workflow run release.yml')
+      assert.equal(r.code, 2)
+      assert.match(r.stderr, /release\.yml/)
     })
   })
 
@@ -704,7 +725,9 @@ describe('release-workflow-guard hook', () => {
       // Create a sibling project named "socket-other" alongside the
       // primary fixture; place a stubs.yml in the sibling. The hook
       // must read the sibling, not the primary.
-      const projectsRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'rwg-roots-'))
+      const projectsRoot = await fs.mkdtemp(
+        path.join(os.tmpdir(), 'rwg-roots-'),
+      )
       const primaryDir = path.join(projectsRoot, 'socket-btm')
       const siblingDir = path.join(projectsRoot, 'socket-other')
       await fs.mkdir(path.join(primaryDir, '.github', 'workflows'), {

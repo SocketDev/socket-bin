@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -32,7 +32,6 @@ function runHook(transcriptPath: string): {
   exitCode: number
 } {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify({ transcript_path: transcriptPath }),
   })
   return {
@@ -107,7 +106,6 @@ test('disabled env var short-circuits', () => {
   const { path: p, cleanup } = makeTranscript('Note that we should skip this.')
   try {
     const result = spawnSync('node', [HOOK_PATH], {
-      // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
       input: JSON.stringify({ transcript_path: p }),
       env: { ...process.env, SOCKET_COMMENT_TONE_REMINDER_DISABLED: '1' },
     })

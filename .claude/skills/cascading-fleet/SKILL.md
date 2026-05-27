@@ -7,7 +7,7 @@ allowed-tools: Bash(git fetch:*), Bash(git worktree:*), Bash(git branch:*), Bash
 
 # cascading-fleet
 
-The fleet runs on `chore(sync): cascade fleet template@<sha>` commits — every wheelhouse template change has to land in every fleet repo to take effect. This skill packages the operation so it isn't recreated ad-hoc per session.
+The fleet runs on `chore(wheelhouse): cascade template@<sha>` commits. Every wheelhouse template change has to land in every fleet repo to take effect. This skill packages the operation so it isn't recreated ad-hoc per session.
 
 ## When to use
 
@@ -15,26 +15,26 @@ The fleet runs on `chore(sync): cascade fleet template@<sha>` commits — every 
 - A `socket-registry` pin chain (the multi-layer setup-and-install → setup → checkout pin graph) needs propagation.
 - Batching multiple template SHAs into one wave.
 
-Never use this skill while another cascade is in flight (each cascade creates a `chore/sync-<sha>` branch per repo; concurrent runs collide).
+Never use this skill while another cascade is in flight (each cascade creates a `chore/wheelhouse-<sha>` branch per repo; concurrent runs collide).
 
 ## Two modes
 
-### Mode 1 — `template` (outer cascade, default)
+### Mode 1: `template` (outer cascade, default)
 
 Propagates a `socket-wheelhouse/template/` SHA to every fleet repo. The flow:
 
 1. For each fleet repo:
-2. Worktree off `origin/<default-branch>` on a fresh `chore/sync-<sha>` branch.
+2. Worktree off `origin/<default-branch>` on a fresh `chore/wheelhouse-<sha>` branch.
 3. Run `socket-wheelhouse/scripts/sync-scaffolding/cli.mts --target <wt> --fix`.
-4. If the cascade modified anything: surgical-stage with `FLEET_SYNC=1 git add --update`, commit `chore(sync): cascade fleet template@<sha>`, push direct to base.
+4. If the cascade modified anything: surgical-stage with `FLEET_SYNC=1 git add --update`, commit `chore(wheelhouse): cascade template@<sha>`, push direct to base.
 5. If direct push is rejected: push the branch, open a PR.
 6. Clean up the worktree + the temp branch.
 
-The `FLEET_SYNC=1` sentinel is recognized by the wheelhouse `no-revert-guard` + `overeager-staging-guard` hooks. It allowlists exactly: `git commit --no-verify` whose message starts with `chore(sync): cascade fleet template@`, `git push --no-verify`, and `git add -A`/`-u`/`.`. Nothing else.
+The `FLEET_SYNC=1` sentinel is recognized by the wheelhouse `no-revert-guard` + `overeager-staging-guard` hooks. It allowlists exactly: `git commit --no-verify` whose message starts with `chore(wheelhouse): cascade template@`, `git push --no-verify`, and `git add -A`/`-u`/`.`. Nothing else.
 
-### Mode 2 — `registry-pins`
+### Mode 2: `registry-pins`
 
-Propagates a `socket-registry` pin chain through the fleet. Different shape — uses `scripts/cascade-registry-pins.mts --sha <M'>` to walk the per-repo workflow pins. Documented here for completeness; the cascade script in `lib/cascade-template.sh` covers Mode 1, and a future `lib/cascade-registry-pins.sh` will cover Mode 2.
+Propagates a `socket-registry` pin chain through the fleet. Different shape: uses `scripts/cascade-registry-pins.mts --sha <M'>` to walk the per-repo workflow pins. Documented here for completeness; the cascade script in `lib/cascade-template.mts` covers Mode 1, and a future `lib/cascade-registry-pins.mts` will cover Mode 2.
 
 For now, the registry-pin cascade is two steps documented inline:
 
@@ -49,15 +49,15 @@ Skipping Step 1 means Step 3 propagates a SHA whose dependency graph still pins 
 ## How to invoke
 
 ```bash
-# Mode 1 — propagate wheelhouse template SHA
-bash .claude/skills/cascading-fleet/lib/cascade-template.sh <template-sha>
+# Mode 1: propagate wheelhouse template SHA
+node .claude/skills/cascading-fleet/lib/cascade-template.mts <template-sha>
 ```
 
 The script reads the fleet-repo list from `lib/fleet-repos.txt` (single source of truth), iterates, and writes a per-repo result line to stdout. Output also tees to `/tmp/cascade-<sha>.log` for post-hoc inspection.
 
-## Worktree cleanup — the branch-cleanup bug
+## Worktree cleanup: the branch-cleanup bug
 
-A subtle gotcha: the script's pre-clean step (`git branch -D <branch>`) MUST run from `${src}` (the source repo), not from `/tmp` or the worktree directory. If the loop crashes mid-iteration before `cd`-ing into the worktree, a stale `chore/sync-<sha>` branch can be left behind. The provided script handles this — but if you write a one-off cascade, make sure your cleanup runs from the right cwd.
+A subtle gotcha: the script's pre-clean step (`git branch -D <branch>`) MUST run from `${src}` (the source repo), not from `/tmp` or the worktree directory. If the loop crashes mid-iteration before `cd`-ing into the worktree, a stale `chore/wheelhouse-<sha>` branch can be left behind. The provided script handles this. If you write a one-off cascade, make sure your cleanup runs from the right cwd.
 
 ## Soak time before catalog cascades
 
@@ -65,7 +65,7 @@ If the wheelhouse template change includes a `@socketsecurity/lib` catalog bump 
 
 ## Stop conditions
 
-- Branch already exists in a fleet repo (`fatal: a branch named 'chore/sync-<sha>' already exists`): pre-clean from `${src}` then retry that repo only.
+- Branch already exists in a fleet repo (`fatal: a branch named 'chore/wheelhouse-<sha>' already exists`): pre-clean from `${src}` then retry that repo only.
 - Worktree-add fails: another worktree at the target path; cleanup with `git worktree remove --force <wt>`.
 - Push rejected on direct base: the script automatically falls back to PR. Confirm via the PR URL printed to stdout.
 

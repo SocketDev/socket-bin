@@ -17,13 +17,13 @@
 // Time budget: ~3 seconds total. Anything slower than that holds the
 // SessionStart hook chain and the user feels it.
 
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { spawn } from '@socketsecurity/lib-stable/process/spawn/child'
 import { appendFileSync, existsSync } from 'node:fs'
 import http from 'node:http'
 import path from 'node:path'
 import process from 'node:process'
 
-import { getDefaultLogger } from '@socketsecurity/lib-stable/logger'
+import { getDefaultLogger } from '@socketsecurity/lib-stable/logger/default'
 import { getSocketAppDir } from '@socketsecurity/lib-stable/paths/socket'
 
 const logger = getDefaultLogger()

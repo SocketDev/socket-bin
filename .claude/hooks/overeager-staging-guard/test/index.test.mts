@@ -7,7 +7,7 @@
  */
 
 import assert from 'node:assert/strict'
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -36,7 +36,6 @@ function runHook(
     transcript_path: options.transcriptPath,
   }
   const r = spawnSync('node', [HOOK], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify(payload),
     env: {
       ...process.env,
@@ -122,6 +121,19 @@ test('blocks broad add chained after another command', () => {
 test('blocks broad add when env vars are set on the command', () => {
   const r = runHook('GIT_AUTHOR_NAME=foo git add .', { cwd: tmpRepo })
   assert.equal(r.code, 2)
+})
+
+test('blocks `git -C path add .` (subcommand after a global flag)', () => {
+  const r = runHook(`git -C ${tmpRepo} add .`, { cwd: tmpRepo })
+  assert.equal(r.code, 2)
+  assert.match(r.stderr, /git add \./)
+})
+
+test('quoted "git add ." inside a message is NOT a broad add', () => {
+  // Regression: the parser distinguishes a real invocation from the
+  // same words sitting inside a quoted commit-message argument.
+  const r = runHook('git commit -m "stop using git add ."', { cwd: tmpRepo })
+  assert.equal(r.code, 0)
 })
 
 test('allows `git add path/to/file.ts`', () => {
@@ -255,7 +267,6 @@ test('git commit silent when index files match transcript git-add history', () =
 
 test('non-Bash tool_name is ignored', () => {
   const r = spawnSync('node', [HOOK], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify({
       tool_name: 'Edit',
       tool_input: { file_path: '/tmp/foo' },
@@ -266,7 +277,6 @@ test('non-Bash tool_name is ignored', () => {
 
 test('malformed payload is ignored (fail-open)', () => {
   const r = spawnSync('node', [HOOK], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: 'not-json',
   })
   assert.equal(r.status, 0)

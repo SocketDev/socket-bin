@@ -42,7 +42,7 @@ If the user types `/green-ci socket-btm ci.yml` we run `fast`. If they type `/gr
 
 ## Rules
 
-- **Never push to a protected branch without confirming.** If the target repo blocks direct push to main, open a PR instead (use the fleet's push-or-PR pattern; see `scripts/cascade-tooling/cascade-fleet.mts` in this repo for the canonical implementation).
+- **Never push to a protected branch without confirming.** If the target repo blocks direct push to main, open a PR instead (use the fleet's push-or-PR pattern; see `scripts/fleet/cascade-fleet.mts` in this repo for the canonical implementation).
 - **Each fix is one commit.** Don't bundle the CI fix with unrelated changes — the commit message should let a future reader understand exactly which failing step it addresses.
 - **Don't bump cache versions just to mask a real bug.** If the failure is a cache miss + downstream code that can't handle a fresh cache, fix the downstream code. Only bump the cache version when the cached artifact itself is staler than the source.
 - **Escalate, don't paper over, GH org policy failures.** "Action not allowed by enterprise admin" requires the org-level allowlist update; the repo can't fix it. Tell the user.

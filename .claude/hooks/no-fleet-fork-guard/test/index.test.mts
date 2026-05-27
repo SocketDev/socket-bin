@@ -11,7 +11,7 @@
 // prefer-async-spawn: streaming-stdio-required — test spawns child
 // subprocess and pipes stdin/stdout/stderr; Node spawn returns the
 // ChildProcess streaming surface the lib promise wrapper does not.
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { spawn } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -36,6 +36,11 @@ async function runHook(
     payload['transcript_path'] = transcriptPath
   }
   const child = spawn(process.execPath, [HOOK], { stdio: 'pipe' })
+  // v6 lib-stable spawn returns an enriched Promise that rejects on
+  // non-zero exit; this test reads stderr + exit via manual listeners
+  // instead. Swallow the Promise rejection so it doesn't race the
+  // listener-based resolve and trigger "async activity after test ended".
+  void child.catch(() => undefined)
   child.stdin!.end(JSON.stringify(payload))
   let stderr = ''
   child.process.stderr!.on('data', chunk => {
@@ -179,6 +184,23 @@ test('Edit on docs/claude.md/* in a fleet repo is BLOCKED', async () => {
       tool_name: 'Edit',
     })
     assert.strictEqual(result.code, 2)
+  } finally {
+    rmSync(repo, { force: true, recursive: true })
+  }
+})
+
+test('Edit on docs/claude.md/repo/* in a fleet repo is ALLOWED (per-repo carve-out)', async () => {
+  // The repo/ subdirectory is the per-repo analog of fleet/. Host repos
+  // drop architecture/commands/build detail here to fit the whole-file
+  // size cap without cascading the content fleet-wide.
+  const repo = makeFakeFleetRepo()
+  try {
+    const file = makeCanonicalFile(repo, 'docs/claude.md/repo/architecture.md')
+    const result = await runHook({
+      tool_input: { file_path: file, new_string: 'x' },
+      tool_name: 'Edit',
+    })
+    assert.strictEqual(result.code, 0)
   } finally {
     rmSync(repo, { force: true, recursive: true })
   }

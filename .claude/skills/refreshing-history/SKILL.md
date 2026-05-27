@@ -44,11 +44,11 @@ The runner walks 10 phases end-to-end. See [`run.mts`](run.mts) for the implemen
 
 ## Hard requirements
 
-- **Default-branch fallback** — never hard-code `main` or `master`; the runner resolves `$BASE` via `git symbolic-ref refs/remotes/origin/HEAD`.
-- **Worktree-only** — the primary checkout is never touched (parallel-Claude rule).
-- **Remote backup before destruction** — without it, recovery requires reflog access from the machine that ran the squash.
-- **Signed commit** — pass `-S` explicitly to `commit-tree`; the bare config flag is unreliable for plumbing.
-- **Integrity check before push** — pre-squash tree must equal post-squash tree (modulo submodules).
+- **Default-branch fallback**: never hard-code `main` or `master`; the runner resolves `$BASE` via `git symbolic-ref refs/remotes/origin/HEAD`.
+- **Worktree-only**: the primary checkout is never touched (parallel-Claude rule).
+- **Remote backup before destruction**: without it, recovery requires reflog access from the machine that ran the squash.
+- **Signed commit**: pass `-S` explicitly to `commit-tree`; the bare config flag is unreliable for plumbing.
+- **Integrity check before push**: pre-squash tree must equal post-squash tree (modulo submodules).
 
 ## Recovery
 
@@ -64,7 +64,7 @@ The backup ref persists indefinitely on the remote until manually deleted.
 
 ## Cross-fleet orchestration
 
-Run via `socket-wheelhouse/scripts/run-skill-fleet.mts` to dispatch one job per repo in parallel — useful for refreshing multiple repos in one wave.
+Run via `socket-wheelhouse/scripts/run-skill-fleet.mts` to dispatch one job per repo in parallel. Useful for refreshing multiple repos in one wave.
 
 ## Success criteria
 

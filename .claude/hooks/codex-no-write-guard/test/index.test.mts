@@ -3,7 +3,7 @@
 // prefer-async-spawn: streaming-stdio-required — test spawns child
 // subprocess and pipes stdin/stdout/stderr; Node spawn returns the
 // ChildProcess streaming surface the lib promise wrapper does not.
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { spawn } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -18,6 +18,11 @@ type Result = { code: number; stderr: string }
 
 async function runHook(payload: Record<string, unknown>): Promise<Result> {
   const child = spawn(process.execPath, [HOOK], { stdio: 'pipe' })
+  // v6 lib-stable spawn returns an enriched Promise that rejects on
+  // non-zero exit; this test reads stderr + exit via manual listeners
+  // instead. Swallow the Promise rejection so it doesn't race the
+  // listener-based resolve and trigger "async activity after test ended".
+  void child.catch(() => undefined)
   child.stdin!.end(JSON.stringify(payload))
   let stderr = ''
   child.process.stderr!.on('data', chunk => {
@@ -36,6 +41,35 @@ test('non-codex Bash passes', async () => {
     tool_input: { command: 'ls -la' },
   })
   assert.strictEqual(r.code, 0)
+})
+
+test('command mentioning the guard name (codex-no-write-guard) is NOT a codex invocation', async () => {
+  // Regression: the old `codex\b` regex matched `codex-no-write-guard` and
+  // the word "write" in it → false block. The parser sees the binary is
+  // `for`/`ls`/`grep`, not `codex`.
+  const r = await runHook({
+    tool_name: 'Bash',
+    tool_input: {
+      command: 'grep -n "write" template/.claude/hooks/codex-no-write-guard/index.mts',
+    },
+  })
+  assert.strictEqual(r.code, 0)
+})
+
+test('quoted "codex --write" inside an echo is NOT a codex invocation', async () => {
+  const r = await runHook({
+    tool_name: 'Bash',
+    tool_input: { command: 'echo "run codex --write to apply"' },
+  })
+  assert.strictEqual(r.code, 0)
+})
+
+test('real codex --write in a chain is still blocked', async () => {
+  const r = await runHook({
+    tool_name: 'Bash',
+    tool_input: { command: 'cd /x && codex --write "do it"' },
+  })
+  assert.strictEqual(r.code, 2)
 })
 
 test('codex with --write blocked', async () => {

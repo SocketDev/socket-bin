@@ -19,8 +19,8 @@
 import { existsSync } from 'node:fs'
 import process from 'node:process'
 
-import { getDefaultLogger } from '@socketsecurity/lib-stable/logger'
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { getDefaultLogger } from '@socketsecurity/lib-stable/logger/default'
+import { spawn } from '@socketsecurity/lib-stable/process/spawn/child'
 
 const WIN32 = process.platform === 'win32'
 const logger = getDefaultLogger()

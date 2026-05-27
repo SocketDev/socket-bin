@@ -1,6 +1,9 @@
 // node --test specs for the actionlint-on-workflow-edit hook.
 
-import { spawn, spawnSync } from '@socketsecurity/lib-stable/spawn'
+import {
+  spawn,
+  spawnSync,
+} from '@socketsecurity/lib-stable/process/spawn/child'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
@@ -13,6 +16,11 @@ type Result = { code: number; stderr: string }
 
 async function runHook(payload: Record<string, unknown>): Promise<Result> {
   const child = spawn(process.execPath, [HOOK], { stdio: 'pipe' })
+  // v6 lib-stable spawn returns an enriched Promise that rejects on
+  // non-zero exit; this test reads stderr + exit via manual listeners
+  // instead. Swallow the Promise rejection so it doesn't race the
+  // listener-based resolve and trigger "async activity after test ended".
+  void child.catch(() => undefined)
   child.stdin!.end(JSON.stringify(payload))
   let stderr = ''
   child.process.stderr!.on('data', chunk => {

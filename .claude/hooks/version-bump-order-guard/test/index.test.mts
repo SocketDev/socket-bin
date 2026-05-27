@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -46,7 +46,6 @@ function runHook(
   extraEnv: Record<string, string> = {},
 ): { stderr: string; exitCode: number } {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify({
       tool_name: 'Bash',
       tool_input: { command },
@@ -112,7 +111,6 @@ test('ALLOWS git tag with non-version label (no enforcement)', () => {
 
 test('IGNORES non-Bash tools', () => {
   const result = spawnSync('node', [HOOK_PATH], {
-    // @ts-expect-error TS2353 -- lib v5 SpawnSyncOptions omits "input"; v6 exposes it. Runtime accepts it.
     input: JSON.stringify({
       tool_name: 'Write',
       tool_input: { command: 'git tag v1.0.0' },
