@@ -303,8 +303,8 @@ importers:
   .claude/hooks/judgment-reminder:
     dependencies:
       compromise:
-        specifier: 14.15.0
-        version: 14.15.0
+        specifier: 14.15.1
+        version: 14.15.1
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -449,6 +449,24 @@ importers:
         version: 24.9.2
 
   .claude/hooks/overeager-staging-guard:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.9.2
+
+  .claude/hooks/parallel-agent-edit-guard:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.9.2
+
+  .claude/hooks/parallel-agent-on-stop-reminder:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.9.2
+
+  .claude/hooks/parallel-agent-staging-guard:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -646,6 +664,12 @@ importers:
         version: 24.9.2
 
   .claude/hooks/token-guard: {}
+
+  .claude/hooks/trust-downgrade-guard:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.9.2
 
   .claude/hooks/variant-analysis-reminder:
     devDependencies:
@@ -1414,8 +1438,8 @@ packages:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
-  compromise@14.15.0:
-    resolution: {integrity: sha512-YEMv5JGWyqRJw5hdZqDVQF3MMlHA6TRiXreR8IYffk6xB7GA5p/8DeDzvg0Jy2tHNGpD+qJGl0+oJwA+5R/sVA==}
+  compromise@14.15.1:
+    resolution: {integrity: sha512-9F3UkUaEU1PPz2fgStkE/TI4tk++0wHxS8xfWq9PQWL/v28dy8bEcPVVSLh3dISIRD7PEhJ8YTzHRKF8y9tnLA==}
     engines: {node: '>=12.0.0'}
 
   cross-spawn@7.0.6:
@@ -2316,7 +2340,7 @@ snapshots:
 
   commander@13.1.0: {}
 
-  compromise@14.15.0:
+  compromise@14.15.1:
     dependencies:
       efrt: 2.7.0
       grad-school: 0.0.5

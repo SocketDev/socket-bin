@@ -5,10 +5,10 @@
   "description": "SEA-packed binaries for @socketbin/* packages. Downloads prebuilt artifacts from socket-btm GH Releases, verifies checksums, publishes to npm.",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@11.3.0",
+  "packageManager": "pnpm@11.4.0",
   "engines": {
     "node": ">=18.20.8",
-    "pnpm": ">=11.3.0"
+    "pnpm": ">=11.4.0"
   },
   "scripts": {
     "build": "echo 'no build — publish-only repo'",

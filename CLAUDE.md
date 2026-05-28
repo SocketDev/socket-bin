@@ -27,7 +27,7 @@ Identify users by git credentials and use their actual name. Use "you/your" when
 
 ### Parallel Claude sessions
 
-🚨 Multiple Claude sessions may target the same checkout (parallel agents, terminals, or worktrees on the same `.git/`). **The umbrella rule:** never run a git command that mutates state belonging to a path other than the file you just edited. Forbidden in the primary checkout: `git stash`, `git add -A` / `git add .` (enforced by `.claude/hooks/overeager-staging-guard/`; bypass: `Allow add-all bypass`), `git checkout/switch <branch>`, `git reset --hard <non-HEAD>`. Branch work goes in a `git worktree`. Cross-repo imports via `@socketsecurity/lib/...` only, never `../<sibling-repo>/...` (enforced by `.claude/hooks/cross-repo-guard/`). Full prohibition list + worktree recipe in [`docs/claude.md/fleet/parallel-claude-sessions.md`](docs/claude.md/fleet/parallel-claude-sessions.md).
+🚨 Multiple Claude sessions may target the same checkout (parallel agents, terminals, or worktrees on the same `.git/`). **The umbrella rule:** never run a git command that mutates state belonging to a path other than the file you just edited. Forbidden in the primary checkout: `git stash`, `git add -A` / `git add .` (enforced by `.claude/hooks/overeager-staging-guard/`; bypass: `Allow add-all bypass`), `git checkout/switch <branch>`, `git reset --hard <non-HEAD>`. Branch work goes in a `git worktree`. Cross-repo imports via `@socketsecurity/lib/...` only, never `../<sibling-repo>/...` (enforced by `.claude/hooks/cross-repo-guard/`). Dirty paths you didn't author this session + that changed recently are likely another live agent — never `add -A`/`stash`/`reset --hard`/`checkout`/`restore` over them; stage only your own files (enforced by `.claude/hooks/parallel-agent-on-stop-reminder/` + `.claude/hooks/parallel-agent-staging-guard/`; bypass `Allow parallel-agent-staging bypass`). **Why:** 2026-05-27 a session's own `pnpm check` surfaced another agent's migration files; it nearly committed them. Full prohibition list + worktree recipe in [`docs/claude.md/fleet/parallel-claude-sessions.md`](docs/claude.md/fleet/parallel-claude-sessions.md).
 
 ### Default branch fallback
 
@@ -82,13 +82,15 @@ Some fleet repos squash the default branch on a cadence — currently socket-add
 
 🚨 **Package manager: `pnpm`** — scripts via `pnpm run foo --flag` (never `foo:bar`); after `package.json` edits, `pnpm install`. NEVER `npx` / `pnpm dlx` / `yarn dlx` — use `pnpm exec` or `pnpm run` # socket-hook: allow npx. NEVER `--experimental-strip-types` to Node (enforced by `.claude/hooks/no-experimental-strip-types-guard/`).
 
-🚨 **Engine floors pinned fleet-wide:** `engines.pnpm: ">=11.3.0"` (matches the `packageManager` pin), `engines.npm: ">=11.15.0"` (introduced `npm stage publish`). Wheelhouse `package.json` is the source of truth; both cascade via sync-scaffolding `engines_pnpm_drift` + `engines_npm_drift`.
+🚨 **Engine floors pinned fleet-wide:** `engines.pnpm: ">=11.4.0"` (matches the `packageManager` pin), `engines.npm: ">=11.16.0"` (added `allowScripts` script opt-in, RFC #868). Wheelhouse `package.json` is source of truth; both cascade via sync-scaffolding `engines_pnpm_drift` + `engines_npm_drift`.
 
 🚨 **Bundler: rolldown, not esbuild.** Backward compatibility is FORBIDDEN — actively remove when encountered.
 
 🚨 **`-stable` self-import:** `scripts/**` + `.claude/hooks/**` import the repo-owned fleet package via its `-stable` alias, never the bare name (bare = WIP local `src/`). Autofix `socket/prefer-stable-self-import`.
 
 🚨 **New deps Socket-scored at edit time** (enforced by `.claude/hooks/check-new-deps/`); the 7-day `minimumReleaseAge` soak is malware protection (bypass `Allow minimumReleaseAge bypass`; enforced by `.claude/hooks/minimum-release-age-guard/`). Soak-bypass entries need `# published: YYYY-MM-DD | removable: YYYY-MM-DD` annotations (enforced by `.claude/hooks/soak-exclude-date-annotation-guard/`). Dep overrides go in `pnpm-workspace.yaml` `overrides:`, never `package.json` `pnpm.overrides` (bypass `Allow package-json-overrides bypass`; enforced by `.claude/hooks/no-package-json-pnpm-overrides-guard/`).
+
+🚨 **Never weaken a supply-chain trust gate** (`trustPolicy: no-downgrade`, `--config.trustPolicy=trust-all`, `blockExoticSubdeps`). Any change making the system more trusting/vulnerable needs `Allow trust-downgrade bypass` verbatim — **single-use, not persisted**. Fix a stale lockfile via the soak/exclude entry, never by disabling the policy (enforced by `.claude/hooks/trust-downgrade-guard/`).
 
 Full ruleset (docs lead with pnpm, `packageManager` field, `.config/` placement, `.mts` runners, monorepo `engines.node`, vitest/node-test runner separation, `npm-run-all2` + `node --run` opt-in) in [`docs/claude.md/fleet/tooling.md`](docs/claude.md/fleet/tooling.md).
 
@@ -100,7 +102,7 @@ Full ruleset (docs lead with pnpm, `packageManager` field, `.config/` placement,
 
 ### Token minification
 
-Two surfaces apply lossless, deterministic compression to Claude tool_result payloads (JSON whitespace, `cat -n` prefixes, 3+ blank lines → 1; no semantic ML compression). **Wire-level proxy** `@socketsecurity/token-minifier` ([`packages/`](../packages/socket-token-minifier/)) sits between Claude Code and api.anthropic.com when `ANTHROPIC_BASE_URL=http://localhost:7779` is set; `pnpm run install-token-minifier`, auto-started **fail-closed** by the `socket-token-minifier-start` SessionStart hook (only sets the env var if the proxy is healthy on `:7779`). **In-context hook** `minify-mcp-output` fires PostToolUse on MCP results via `hookSpecificOutput.updatedMCPToolOutput` — the only rewrite channel for already-collected output (built-in Read/Bash have none; use the proxy) (enforced by `.claude/hooks/minify-mcp-output/`, `.claude/hooks/socket-token-minifier-start/`).
+Two surfaces apply lossless, deterministic compression to Claude tool_result payloads (JSON whitespace, `cat -n` prefixes, blank-line runs; no ML). **Wire-level proxy** `@socketsecurity/token-minifier` ([`packages/`](../packages/socket-token-minifier/)) sits between Claude Code and api.anthropic.com via `ANTHROPIC_BASE_URL=http://localhost:7779`; auto-started **fail-closed** by `socket-token-minifier-start` (sets the env var only if healthy). **In-context hook** `minify-mcp-output` rewrites MCP results via `hookSpecificOutput.updatedMCPToolOutput` (built-in Read/Bash have no such channel — use the proxy) (enforced by `.claude/hooks/minify-mcp-output/`, `.claude/hooks/socket-token-minifier-start/`).
 
 ### Fix it, don't defer
 
@@ -134,7 +136,7 @@ Exceptions (state the trade-off and ask): genuinely large refactor on a small bu
 
 ### Untracked-by-default for vendored / build-copied trees
 
-🚨 Untracked dirs under `additions/source-patched/`, `vendor/`, `third_party/`, `external/`, `upstream/`, `deps/<libname>/`, `pkg-node/`, or `*-bundled`/`*-vendored` paths are **untracked-by-default**. Before staging: `git status --ignored` + read `.gitignore` (look for `dir/*` + `!dir/file` allowlists — the allowlisted file is our hand-written glue, not the whole tree) + grep for the build script that copies the dir in. When REMOVING a class / attribute / selector that other code consumes, grep BOTH the repo root AND every `upstream/` / `vendor/` / `third_party/` submodule before deleting — past incident: stripped a CSS class because repo-root grep found 0 hits; upstream bundle hydrated from it and the rendered output went blank (enforced by `.claude/hooks/consumer-grep-reminder/`). Ban "must be" / "presumably" / "looks like" when handling someone else's tree — run the command instead. Ask before committing 100+ file or multi-MB drops. Full playbook in [`docs/claude.md/fleet/untracked-by-default.md`](docs/claude.md/fleet/untracked-by-default.md).
+🚨 Dirs under `additions/source-patched/`, `vendor/`, `third_party/`, `external/`, `upstream/`, `deps/<lib>/`, `pkg-node/`, `*-bundled`/`*-vendored` are **untracked-by-default** — before staging, `git status --ignored` + read `.gitignore` allowlists + find the build script that copies the dir. When REMOVING a consumed class/attr/selector, grep the repo root AND every `upstream/`/`vendor/` submodule first (enforced by `.claude/hooks/consumer-grep-reminder/`). Run the command instead of guessing; ask before 100+-file/multi-MB drops. Full playbook: [`docs/claude.md/fleet/untracked-by-default.md`](docs/claude.md/fleet/untracked-by-default.md).
 
 ### Hook bypasses require the canonical phrase
 
@@ -204,7 +206,7 @@ Full rationale + cascade behavior in [`docs/claude.md/fleet/lint-rules.md`](docs
 
 ### c8 / v8 coverage ignore directives
 
-🚨 `/* c8 ignore next N */` is broken for multi-line bodies — the c8/v8 reporter counts physical lines, not statements, so a `catch { logger.warn(...); return undefined }` body is partly ignored and partly reported as uncovered. Always use `/* c8 ignore start - <reason> */` ... `/* c8 ignore stop */` brackets around the construct. Single-line uses (`/* c8 ignore next */ return undefined`) are fine. **Why:** Past incident, 2026-05-24 — socket-lib coverage jumped 98.9% → 99.15% just by rewriting nine files' worth of `next N` directives to start/stop blocks; the defensive arms had been correctly marked all along, the reporter just wasn't honoring the directive form. Full pattern catalog + diagnosis in [`docs/claude.md/fleet/c8-ignore-directives.md`](docs/claude.md/fleet/c8-ignore-directives.md).
+🚨 `/* c8 ignore next N */` is broken for multi-line bodies (the reporter counts physical lines, not statements) — always bracket the construct with `/* c8 ignore start - <reason> */` … `/* c8 ignore stop */`; single-line `/* c8 ignore next */` is fine. **Why:** 2026-05-24 socket-lib coverage rose 98.9%→99.15% just by rewriting `next N` to start/stop. Full catalog: [`docs/claude.md/fleet/c8-ignore-directives.md`](docs/claude.md/fleet/c8-ignore-directives.md).
 
 ### 1 path, 1 reference
 
