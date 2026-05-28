@@ -58,5 +58,8 @@
     "type": "git",
     "url": "git+https://github.com/SocketDev/socket-bin.git"
   },
-  "homepage": "https://github.com/SocketDev/socket-bin"
+  "homepage": "https://github.com/SocketDev/socket-bin",
+  "allowScripts": {
+    "esbuild": true
+  }
 }
