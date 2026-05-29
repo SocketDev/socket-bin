@@ -23,6 +23,7 @@ catalog:
   '@typescript/native-preview': 7.0.0-dev.20250926.1
   '@vitest/coverage-v8': 4.1.6
   '@vitest/ui': 4.1.6
+  compromise: 14.15.1
   ecc-agentshield: 1.4.0
   husky: 9.1.7
   'mdast-util-from-markdown': 2.0.3
@@ -56,8 +57,12 @@ minimumReleaseAgeExclude:
   - '@stuie/*'
   # Network-mocking lib used in fleet test suites. v15 betas pre-date
   # npm's `time` field for the major; allow pinned beta until v15 GA.
+  # published: 2025-10-13 | removable: 2025-10-20
   - 'nock@15.0.0-beta.11'
+  # published: 2025-08-04 | removable: 2025-08-11
   - 'npm-run-all2@9.0.0'
+  # published: 2026-05-27 | removable: 2026-06-03
+  - 'compromise@14.15.1'
   - 'shell-quote'
   - 'vite'
   - 'vitest'

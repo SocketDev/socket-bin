@@ -15,12 +15,21 @@ catalogs:
     '@socketsecurity/lib-stable':
       specifier: npm:@socketsecurity/lib@6.0.5
       version: 6.0.5
+    '@socketsecurity/sdk-stable':
+      specifier: npm:@socketsecurity/sdk@4.0.1
+      version: 4.0.1
     '@types/node':
       specifier: 24.9.2
       version: 24.9.2
+    '@types/shell-quote':
+      specifier: 1.7.5
+      version: 1.7.5
     '@typescript/native-preview':
       specifier: 7.0.0-dev.20250926.1
       version: 7.0.0-dev.20250926.1
+    compromise:
+      specifier: 14.15.1
+      version: 14.15.1
     ecc-agentshield:
       specifier: 1.4.0
       version: 1.4.0
@@ -30,6 +39,9 @@ catalogs:
     oxlint:
       specifier: 1.52.0
       version: 1.52.0
+    shell-quote:
+      specifier: 1.8.4
+      version: 1.8.4
     taze:
       specifier: 19.9.2
       version: 19.9.2
@@ -65,15 +77,24 @@ importers:
       '@socketsecurity/lib-stable':
         specifier: 'catalog:'
         version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
+      '@socketsecurity/sdk-stable':
+        specifier: 'catalog:'
+        version: '@socketsecurity/sdk@4.0.1'
       '@types/node':
         specifier: 'catalog:'
         version: 24.9.2
+      '@types/shell-quote':
+        specifier: 'catalog:'
+        version: 1.7.5
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20250926.1
       build-infra:
         specifier: workspace:*
         version: link:packages/build-infra
+      compromise:
+        specifier: 'catalog:'
+        version: 14.15.1
       ecc-agentshield:
         specifier: 'catalog:'
         version: 1.4.0
@@ -83,6 +104,9 @@ importers:
       oxlint:
         specifier: 'catalog:'
         version: 1.52.0
+      shell-quote:
+        specifier: 'catalog:'
+        version: 1.8.4
       taze:
         specifier: 'catalog:'
         version: 19.9.2
@@ -681,6 +705,10 @@ packages:
       typescript:
         optional: true
 
+  '@socketsecurity/sdk@4.0.1':
+    resolution: {integrity: sha512-fe3DQp2dFwhc0G6Za36GIMSV+QaPAP5L96K3ZOtywt9nhbwxc9IQwqzdOVztdn5Rbez3t9EHU9Esj24/hWdP0g==}
+    engines: {node: '>=18.20.8', pnpm: '>=11.0.0-rc.0'}
+
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -704,6 +732,9 @@ packages:
 
   '@types/node@24.9.2':
     resolution: {integrity: sha512-uWN8YqxXxqFMX2RqGOrumsKeti4LlmIMIyV0lgut4jx7KQBcBiW6vkDtIBvHnHIquwNfJhk8v2OtmO8zXWHfPA==}
+
+  '@types/shell-quote@1.7.5':
+    resolution: {integrity: sha512-+UE8GAGRPbJVQDdxi16dgadcBfQ+KG2vgZhV1+3A1XmHbmwcdwhCUwIdy+d3pAGrbvgRoVSjeI9vOWyq376Yzw==}
 
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250926.1':
     resolution: {integrity: sha512-gnfz/RY+akGaZER1M9h+k8VW3wO4RRBeDHbC7NrDzEDmynOWN5clIBNXew3vMiyPJ31hMh4DdkEk5uXiQCkM4A==}
@@ -824,6 +855,10 @@ packages:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
+  compromise@14.15.1:
+    resolution: {integrity: sha512-9F3UkUaEU1PPz2fgStkE/TI4tk++0wHxS8xfWq9PQWL/v28dy8bEcPVVSLh3dISIRD7PEhJ8YTzHRKF8y9tnLA==}
+    engines: {node: '>=12.0.0'}
+
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -855,6 +890,10 @@ packages:
     resolution: {integrity: sha512-R98OO1Ujyk2lezDLb+iQmMhF6FwTJCHajy3G4FCB6x7wkSTqR9f8+eAelC5KDzYDsGSbc0sOZvjXOOPRBtMpDg==}
     engines: {node: '>=18'}
     hasBin: true
+
+  efrt@2.7.0:
+    resolution: {integrity: sha512-/RInbCy1d4P6Zdfa+TMVsf/ufZVotat5hCw3QXmWtjU+3pFEOvOQ7ibo3aIxyCJw2leIeAMjmPj+1SLJiCpdrQ==}
+    engines: {node: '>=12.0.0'}
 
   es-define-property@1.0.1:
     resolution: {integrity: sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==}
@@ -947,6 +986,10 @@ packages:
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
+
+  grad-school@0.0.5:
+    resolution: {integrity: sha512-rXunEHF9M9EkMydTBux7+IryYXEZinRk6g8OBOGDBzo/qWJjhTxy86i5q7lQYpCLHN8Sqv1XX3OIOc7ka2gtvQ==}
+    engines: {node: '>=8.0.0'}
 
   has-symbols@1.1.0:
     resolution: {integrity: sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==}
@@ -1103,6 +1146,10 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
+  shell-quote@1.8.4:
+    resolution: {integrity: sha512-VsC6n6vz1ihYYyZZwX7YZSF5l5x36ca17OC+a69h94YqB7X6XLwf+5MOgynYir2SLFUbl8gIYvBo8K8RoNQ6bQ==}
+    engines: {node: '>= 0.4'}
+
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
@@ -1119,6 +1166,9 @@ packages:
 
   std-env@3.10.0:
     resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
+
+  suffix-thumb@5.0.2:
+    resolution: {integrity: sha512-I5PWXAFKx3FYnI9a+dQMWNqTxoRt6vdBdb0O+BJ1sxXCWtSoQCusc13E58f+9p4MYx/qCnEMkD5jac6K2j3dgA==}
 
   taze@19.9.2:
     resolution: {integrity: sha512-If8bq7lSckIMPfXV+C9jjEfdsQnRryh/foKfpX/ah6zI0TrQfUGWSGCaaD32Bqy5/KGRmLZie3EwMSr3Au21XQ==}
@@ -1576,6 +1626,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
+  '@socketsecurity/sdk@4.0.1': {}
+
   '@standard-schema/spec@1.1.0': {}
 
   '@types/chai@5.2.3':
@@ -1601,6 +1653,8 @@ snapshots:
   '@types/node@24.9.2':
     dependencies:
       undici-types: 7.16.0
+
+  '@types/shell-quote@1.7.5': {}
 
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250926.1':
     optional: true
@@ -1709,6 +1763,12 @@ snapshots:
 
   commander@13.1.0: {}
 
+  compromise@14.15.1:
+    dependencies:
+      efrt: 2.7.0
+      grad-school: 0.0.5
+      suffix-thumb: 5.0.2
+
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -1741,6 +1801,8 @@ snapshots:
       zod: 3.25.76
     transitivePeerDependencies:
       - encoding
+
+  efrt@2.7.0: {}
 
   es-define-property@1.0.1: {}
 
@@ -1857,6 +1919,8 @@ snapshots:
       path-scurry: 2.0.2
 
   gopd@1.2.0: {}
+
+  grad-school@0.0.5: {}
 
   has-symbols@1.1.0: {}
 
@@ -2041,6 +2105,8 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
+  shell-quote@1.8.4: {}
+
   siginfo@2.0.0: {}
 
   signal-exit@4.1.0: {}
@@ -2050,6 +2116,8 @@ snapshots:
   stackback@0.0.2: {}
 
   std-env@3.10.0: {}
+
+  suffix-thumb@5.0.2: {}
 
   taze@19.9.2:
     dependencies:
