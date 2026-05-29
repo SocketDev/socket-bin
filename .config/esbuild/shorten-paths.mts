@@ -16,6 +16,8 @@ import type { Comment } from '@babel/types'
 import { parse } from '@babel/parser'
 import MagicString from 'magic-string'
 
+import { errorMessage } from '@socketsecurity/lib-stable/errors'
+
 import type { BuildResult, PluginBuild } from 'esbuild'
 
 import { NODE_MODULES } from '@socketsecurity/lib-stable/paths/dirnames'
@@ -162,7 +164,7 @@ export function createPathShorteningPlugin() {
               await fs.writeFile(outputPath, magicString.toString(), 'utf8')
             } catch (e) {
               logger.error(
-                `Failed to shorten paths in ${outputPath}: ${e instanceof Error ? e.message : String(e)}`,
+                `Failed to shorten paths in ${outputPath}: ${errorMessage(e)}`,
               )
             }
           }

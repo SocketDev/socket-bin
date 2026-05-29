@@ -1,5 +1,5 @@
 {
-  "name": "hook-trust-downgrade-guard",
+  "name": "hook-alpha-sort-reminder",
   "private": true,
   "type": "module",
   "main": "./index.mts",

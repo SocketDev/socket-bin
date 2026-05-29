@@ -14,10 +14,8 @@
  */
 
 import { PACK_APP_TRIPLETS } from './util/pack-app-triplets.mts'
-import {
-  buildAttestationSubject,
-  type SourceAllowlistEntry,
-} from './util/source-allowlist.mts'
+import { buildAttestationSubject } from './util/source-allowlist.mts'
+import type { SourceAllowlistEntry } from './util/source-allowlist.mts'
 
 /**
  * Every authorized cross-org publish for `@socketbin/*` tail packages.

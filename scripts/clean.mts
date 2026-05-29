@@ -11,8 +11,8 @@
 import { glob } from 'node:fs/promises'
 import path from 'node:path'
 
-import { safeDelete } from '@socketsecurity/lib/fs'
-import { getDefaultLogger } from '@socketsecurity/lib/logger'
+import { safeDelete } from '@socketsecurity/lib/fs/safe'
+import { getDefaultLogger } from '@socketsecurity/lib/logger/default'
 
 import { REPO_ROOT } from './paths.mts'
 

@@ -9,7 +9,7 @@ const isCoverageEnabled =
   process.env.COVERAGE === 'true' ||
   process.argv.some(arg => arg.includes('coverage'))
 
-export default defineConfig({
+const vitestConfig = defineConfig({
   test: {
     deps: {
       interopDefault: false,
@@ -80,3 +80,6 @@ export default defineConfig({
     },
   },
 })
+
+// oxlint-disable-next-line socket/no-default-export -- vitest discovers configs by default export; named export wouldn't be picked up.
+export default vitestConfig

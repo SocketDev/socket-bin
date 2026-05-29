@@ -337,7 +337,7 @@ async function fetchPriorProvenanceMap(
     [...uniqueNames].map(async name => {
       const versions = await fetchVersionTrustInfo(name, 'abbreviated')
       const hasAnyAttestation = Object.values(versions).some(
-        v => !!v.attestations,
+        v => !!(v as { attestations?: unknown }).attestations,
       )
       result.set(name, hasAnyAttestation)
     }),

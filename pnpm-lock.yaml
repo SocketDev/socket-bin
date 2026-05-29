@@ -93,60 +93,6 @@ importers:
         specifier: 'catalog:'
         version: 4.0.3(@types/node@24.9.2)(jiti@2.7.0)(yaml@2.9.0)
 
-  packages/binflate: {}
-
-  packages/binflate-darwin-arm64: {}
-
-  packages/binflate-darwin-x64: {}
-
-  packages/binflate-linux-arm64: {}
-
-  packages/binflate-linux-arm64-musl: {}
-
-  packages/binflate-linux-x64: {}
-
-  packages/binflate-linux-x64-musl: {}
-
-  packages/binflate-win32-arm64: {}
-
-  packages/binflate-win32-x64: {}
-
-  packages/binject: {}
-
-  packages/binject-darwin-arm64: {}
-
-  packages/binject-darwin-x64: {}
-
-  packages/binject-linux-arm64: {}
-
-  packages/binject-linux-arm64-musl: {}
-
-  packages/binject-linux-x64: {}
-
-  packages/binject-linux-x64-musl: {}
-
-  packages/binject-win32-arm64: {}
-
-  packages/binject-win32-x64: {}
-
-  packages/binpress: {}
-
-  packages/binpress-darwin-arm64: {}
-
-  packages/binpress-darwin-x64: {}
-
-  packages/binpress-linux-arm64: {}
-
-  packages/binpress-linux-arm64-musl: {}
-
-  packages/binpress-linux-x64: {}
-
-  packages/binpress-linux-x64-musl: {}
-
-  packages/binpress-win32-arm64: {}
-
-  packages/binpress-win32-x64: {}
-
   packages/build-infra:
     dependencies:
       '@socketsecurity/lib':
