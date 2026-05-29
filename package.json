@@ -5,10 +5,10 @@
   "description": "SEA-packed binaries for @socketbin/* packages. Downloads prebuilt artifacts from socket-btm GH Releases, verifies checksums, publishes to npm.",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@11.3.0",
+  "packageManager": "pnpm@11.4.0",
   "engines": {
     "node": ">=18.20.8",
-    "pnpm": ">=11.3.0"
+    "pnpm": ">=11.4.0"
   },
   "scripts": {
     "build": "echo 'no build — publish-only repo'",
@@ -31,7 +31,8 @@
     "update": "node scripts/update.mts",
     "lockstep": "node scripts/lockstep.mts",
     "lockstep:emit-schema": "node scripts/lockstep-emit-schema.mts",
-    "setup-security-tools": "node .claude/hooks/setup-security-tools/install.mts"
+    "setup-security-tools": "node .claude/hooks/setup-security-tools/install.mts",
+    "ci:local": "agent-ci run --all"
   },
   "devDependencies": {
     "@sinclair/typebox": "catalog:",
@@ -58,5 +59,11 @@
     "type": "git",
     "url": "git+https://github.com/SocketDev/socket-bin.git"
   },
-  "homepage": "https://github.com/SocketDev/socket-bin"
+  "homepage": "https://github.com/SocketDev/socket-bin",
+  "allowScripts": {
+    "cpu-features": false,
+    "esbuild": true,
+    "protobufjs": false,
+    "ssh2": false
+  }
 }
