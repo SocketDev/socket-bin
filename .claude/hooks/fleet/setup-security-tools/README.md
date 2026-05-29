@@ -67,7 +67,7 @@ resolves it.
 pnpm run setup
 ```
 
-(That's wired in `package.json` to `node .claude/hooks/setup-security-tools/index.mts`.)
+(That's wired in `package.json` to `node .claude/hooks/fleet/setup-security-tools/index.mts`.)
 
 The script will detect whether you have a `SOCKET_API_KEY` (or the
 forward-canonical `SOCKET_API_TOKEN` alternative), ask if unsure,
@@ -112,7 +112,7 @@ Safe to run multiple times:
 The hook is self-contained but has three workspace dependencies. To
 add it to a new Socket repo:
 
-1. Copy `.claude/hooks/setup-security-tools/` and
+1. Copy `.claude/hooks/fleet/setup-security-tools/` and
    `.claude/commands/setup-security-tools.md`.
 2. Make sure the consumer repo's catalog (or `dependencies`) provides
    `@socketsecurity/lib-stable`, `@socketregistry/packageurl-js-stable`, and
@@ -120,7 +120,7 @@ add it to a new Socket repo:
 3. Make sure `.claude/hooks/` isn't gitignored — add
    `!/.claude/hooks/` to `.gitignore` if needed.
 4. Add a `setup` script to `package.json`:
-   `"setup": "node .claude/hooks/setup-security-tools/index.mts"`.
+   `"setup": "node .claude/hooks/fleet/setup-security-tools/index.mts"`.
 5. Run `pnpm install` so the hook's workspace deps resolve.
 
 ## Troubleshooting

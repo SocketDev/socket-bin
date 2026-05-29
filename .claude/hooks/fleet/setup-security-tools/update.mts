@@ -18,13 +18,11 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { safeDelete } from '@socketsecurity/lib-stable/fs'
-import {
-  httpDownload,
-  httpRequest,
-} from '@socketsecurity/lib-stable/http-request'
-import { getDefaultLogger } from '@socketsecurity/lib-stable/logger'
-import { spawn } from '@socketsecurity/lib-stable/spawn'
+import { safeDelete } from '@socketsecurity/lib-stable/fs/safe'
+import { httpDownload } from '@socketsecurity/lib-stable/http-request/download'
+import { httpRequest } from '@socketsecurity/lib-stable/http-request/request'
+import { getDefaultLogger } from '@socketsecurity/lib-stable/logger/default'
+import { spawn } from '@socketsecurity/lib-stable/process/spawn/child'
 
 const logger = getDefaultLogger()
 
@@ -172,12 +170,12 @@ export async function writeConfig(config: Config): Promise<void> {
 
 export async function computeSha256(filePath: string): Promise<string> {
   const content = await fs.readFile(filePath)
-  return createHash('sha256').update(content).digest('hex')
+  return crypto.createHash('sha256').update(content).digest('hex')
 }
 
 export async function downloadAndHash(url: string): Promise<string> {
   const tmpFile = path.join(
-    tmpdir(),
+    os.tmpdir(),
     `security-tools-update-${Date.now()}-${Math.random().toString(36).slice(2)}`,
   )
   try {
@@ -491,7 +489,7 @@ export async function updateSfw(config: Config): Promise<UpdateResult[]> {
 // ── Main ──
 
 async function main(): Promise<void> {
-  logger.log('Checking for security tool updates...')
+  logger.log('Checking for security tool updates…')
   logger.log('')
 
   const config = readConfig()
