@@ -17,12 +17,12 @@
 
 // prefer-async-spawn: sync-required — top-level CLI runner; entire
 // flow is sync (sequential gates, exit-code aggregation).
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import type { SpawnSyncOptions } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { getDefaultLogger } from '@socketsecurity/lib-stable/logger'
+import { getDefaultLogger } from '@socketsecurity/lib-stable/logger/default'
 
 const logger = getDefaultLogger()
 
@@ -35,6 +35,11 @@ const mode: 'staged' | 'all' | 'modified' = args.includes('--all')
 const fix = args.includes('--fix')
 const quiet = args.includes('--quiet') || args.includes('--silent')
 const stdio: SpawnSyncOptions['stdio'] = quiet ? 'pipe' : 'inherit'
+// On Windows, `pnpm` is a .cmd shim that Node refuses to exec directly
+// via spawnSync (CVE-2024-27980 hardening). The shell wrapper resolves
+// the shim; on POSIX we keep direct invocation so no shell-quoting
+// surface is introduced.
+const useShell = process.platform === 'win32'
 
 const LINTABLE_EXTS = new Set(['.cjs', '.cts', '.js', '.mjs', '.mts', '.ts'])
 
@@ -58,8 +63,8 @@ function gitFiles(args: string[]): string[] {
   // spawnSync with array args — no shell interpolation, no injection
   // surface even if a future caller passes data into args.
   const r = spawnSync('git', args, {
-    encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
+    stdioString: true,
   })
   if (r.status !== 0 || typeof r.stdout !== 'string') {
     return []
@@ -115,8 +120,46 @@ function filterLintable(files: string[]): string[] {
 // `template/` and once in `.claude/`.
 const DOGFOOD_LINT_PATHS = ['.config/oxlint-plugin', 'template']
 
+// Markdown lint pass — gated behind LINT_MARKDOWN=1 so existing fleet
+// repos with pre-existing markdown hygiene findings aren't blocked
+// until they've cleaned up. Operates over the markdownlint-cli2 config
+// at .config/.markdownlint-cli2.jsonc, which scopes globs + ignores
+// and registers the three fleet custom rules
+// (socket-no-private-wheelhouse-leak, socket-no-relative-sibling-
+// script, socket-readme-required-sections). When the env var is unset
+// the function is a no-op and returns 0.
+//
+// Scope choice: markdown lint always runs over the whole tree (the
+// canonical config's globs/ignores decide the scope, not the script).
+// Per-file invocation would require pre-filtering for the same globs +
+// is slower for the small overall file count typical in fleet repos.
+function runMarkdown(): number {
+  if (process.env['LINT_MARKDOWN'] !== '1') {
+    return 0
+  }
+  if (!existsSync('.config/.markdownlint-cli2.jsonc')) {
+    log('Skipping markdownlint: .config/.markdownlint-cli2.jsonc absent.')
+    return 0
+  }
+  log('Running markdownlint-cli2…')
+  const mdArgs = [
+    'exec',
+    'markdownlint-cli2',
+    '--config',
+    '.config/.markdownlint-cli2.jsonc',
+  ]
+  if (fix) {
+    mdArgs.push('--fix')
+  }
+  const mdRes = spawnSync('pnpm', mdArgs, { shell: useShell, stdio })
+  if (mdRes.status !== 0) {
+    return 1
+  }
+  return 0
+}
+
 function runAll(): number {
-  log('Formatting all files...')
+  log('Formatting all files…')
   // spawnSync with array args, no shell interpolation. Matches the
   // socket/prefer-spawn-over-execsync rule: shell-string execSync is
   // banned because every interpolated value is a potential injection
@@ -131,16 +174,16 @@ function runAll(): number {
     fix ? '--write' : '--check',
     '.',
   ]
-  const fmtRes = spawnSync('pnpm', oxfmtArgs, { stdio })
+  const fmtRes = spawnSync('pnpm', oxfmtArgs, { shell: useShell, stdio })
   if (fmtRes.status !== 0) {
     return 1
   }
-  log('Running oxlint on all files...')
+  log('Running oxlint on all files…')
   const oxlintArgs = ['exec', 'oxlint', '-c', '.config/oxlintrc.json']
   if (fix) {
     oxlintArgs.push('--fix')
   }
-  const lintRes = spawnSync('pnpm', oxlintArgs, { stdio })
+  const lintRes = spawnSync('pnpm', oxlintArgs, { shell: useShell, stdio })
   if (lintRes.status !== 0) {
     return 1
   }
@@ -160,7 +203,7 @@ function runAll(): number {
   // to opt in.
   if (process.env['LINT_DOGFOOD'] === '1') {
     if (!quiet) {
-      logger.log('Running oxlint on wheelhouse-self dogfood paths...')
+      logger.log('Running oxlint on wheelhouse-self dogfood paths…')
     }
     for (let i = 0, { length } = DOGFOOD_LINT_PATHS; i < length; i += 1) {
       const dogfoodPath = DOGFOOD_LINT_PATHS[i]!
@@ -176,11 +219,15 @@ function runAll(): number {
         args.push('--fix')
       }
       args.push(dogfoodPath)
-      const r = spawnSync('pnpm', args, { stdio })
+      const r = spawnSync('pnpm', args, { shell: useShell, stdio })
       if (r.status !== 0) {
         return 1
       }
     }
+  }
+  const mdStatus = runMarkdown()
+  if (mdStatus !== 0) {
+    return mdStatus
   }
   return 0
 }
@@ -202,7 +249,7 @@ function runFiles(files: string[]): number {
     '--no-error-on-unmatched-pattern',
     ...files,
   ]
-  const fmtRes = spawnSync('pnpm', oxfmtArgs, { stdio })
+  const fmtRes = spawnSync('pnpm', oxfmtArgs, { shell: useShell, stdio })
   if (fmtRes.status !== 0) {
     return 1
   }
@@ -223,9 +270,20 @@ function runFiles(files: string[]): number {
     oxlintArgs.push('--fix')
   }
   oxlintArgs.push(...files)
-  const lintRes = spawnSync('pnpm', oxlintArgs, { stdio })
+  const lintRes = spawnSync('pnpm', oxlintArgs, { shell: useShell, stdio })
   if (lintRes.status !== 0) {
     return 1
+  }
+  // Markdown lint when any of the changed files is .md / .mdx. The
+  // markdownlint-cli2 config picks its own scope from globs; we just
+  // gate on whether to invoke at all so unrelated edits don't pay the
+  // markdownlint startup cost.
+  const touchedMarkdown = files.some(f => /\.(?:md|mdx)$/i.test(f))
+  if (touchedMarkdown) {
+    const mdStatus = runMarkdown()
+    if (mdStatus !== 0) {
+      return mdStatus
+    }
   }
   return 0
 }

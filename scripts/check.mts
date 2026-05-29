@@ -11,7 +11,7 @@
 
 // prefer-async-spawn: sync-required — top-level CLI runner; entire
 // flow is sequential gate-running with exit-code aggregation.
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import process from 'node:process'
 
 const args = process.argv.slice(2)
@@ -31,7 +31,7 @@ const steps: Array<() => boolean> = [
   () => run('node', ['scripts/lint.mts', ...forwardedArgs]),
   () => run('pnpm', ['exec', 'tsgo', '--noEmit', '-p', 'tsconfig.check.json']),
   // Path-hygiene check (1 path, 1 reference). Mantra-driven gate;
-  // see .claude/skills/path-guard/ + .claude/hooks/path-guard/.
+  // see .claude/skills/path-guard/ + .claude/hooks/fleet/path-guard/.
   () => run('node', ['scripts/check-paths.mts', '--quiet']),
   // Lock-step reference hygiene. Opt-in gate that exits clean when
   // .config/lock-step-refs.json is absent; for repos that ship
@@ -47,7 +47,7 @@ const steps: Array<() => boolean> = [
   // docs/claude.md/fleet/parser-comments.md §7.
   () => run('node', ['scripts/check-lock-step-header.mts', '--quiet']),
   // Soak-exclude date-annotation gate — pairs with
-  // .claude/hooks/soak-exclude-date-annotation-guard/. Catches
+  // .claude/hooks/fleet/soak-exclude-date-annotation-guard/. Catches
   // pnpm-workspace.yaml `minimumReleaseAgeExclude` entries that landed
   // via non-Claude paths without the canonical
   // `# published: YYYY-MM-DD | removable: YYYY-MM-DD` annotation.

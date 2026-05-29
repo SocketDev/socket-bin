@@ -5,10 +5,8 @@
  * package's "always return a non-empty string" contract for `errorStack`.
  */
 
-import {
-  errorMessage as libErrorMessage,
-  errorStack as libErrorStack,
-} from '@socketsecurity/lib/errors'
+import { errorMessage as libErrorMessage } from '@socketsecurity/lib/errors/message'
+import { errorStack as libErrorStack } from '@socketsecurity/lib/errors/stack'
 
 export const errorMessage = libErrorMessage
 

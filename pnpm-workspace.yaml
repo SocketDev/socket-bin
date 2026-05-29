@@ -11,8 +11,8 @@ catalog:
   '@sinclair/typebox': 0.34.49
   '@socketregistry/packageurl-js': 1.4.2
   '@socketregistry/packageurl-js-stable': npm:@socketregistry/packageurl-js@1.4.2
-  '@socketsecurity/lib': 6.0.3
-  '@socketsecurity/lib-stable': 'npm:@socketsecurity/lib@6.0.3'
+  '@socketsecurity/lib': 6.0.5
+  '@socketsecurity/lib-stable': npm:@socketsecurity/lib@6.0.5
   '@socketsecurity/registry': 2.0.2
   '@socketsecurity/registry-stable': npm:@socketsecurity/registry@2.0.2
   '@socketsecurity/sdk': 4.0.1
@@ -54,12 +54,6 @@ minimumReleaseAgeExclude:
   - '@socketregistry/*'
   - '@socketsecurity/*'
   - '@stuie/*'
-  # compromise@14.15.1 is the attested re-publish that clears the
-  # soak. The cascaded judgment-reminder hook pins it exactly, so it
-  # needs a soak bypass. Scoped to the exact tag so a future 14.15.2
-  # still goes through the normal soak time.
-  # published: 2026-05-27 | removable: 2026-06-03
-  - 'compromise@14.15.1'
   # Network-mocking lib used in fleet test suites. v15 betas pre-date
   # npm's `time` field for the major; allow pinned beta until v15 GA.
   - 'nock@15.0.0-beta.11'

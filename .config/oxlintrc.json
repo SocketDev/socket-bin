@@ -1,55 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "unicorn",
-    "import"
-  ],
-  "jsPlugins": [
-    "./oxlint-plugin/index.mts"
-  ],
+  "plugins": ["typescript", "unicorn", "import"],
+  "jsPlugins": ["./oxlint-plugin/index.mts"],
   "categories": {
     "correctness": "error",
     "suspicious": "error"
   },
   "rules": {
-    "eslint/curly": "error",
-    "eslint/no-await-in-loop": "off",
-    "eslint/no-console": "off",
-    "eslint/no-control-regex": "off",
-    "eslint/no-empty": [
-      "error",
-      {
-        "allowEmptyCatch": true
-      }
-    ],
-    "eslint/no-new": "error",
-    "eslint/no-proto": "error",
-    "eslint/no-shadow": "error",
-    "eslint/no-underscore-dangle": "off",
-    "eslint/no-unmodified-loop-condition": "off",
-    "eslint/no-unused-vars": [
-      "error",
-      {
-        "args": "all",
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^$",
-        "caughtErrors": "all",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
-        "ignoreRestSiblings": false
-      }
-    ],
-    "eslint/no-useless-catch": "off",
-    "eslint/no-var": "error",
-    "eslint/prefer-const": "error",
-    "eslint/preserve-caught-error": "off",
-    "eslint/sort-imports": "off",
-    "import/no-cycle": "off",
-    "import/no-named-as-default": "off",
-    "import/no-named-as-default-member": "off",
-    "import/no-self-import": "error",
-    "import/no-unassigned-import": "off",
     "socket/export-top-level-functions": "error",
     "socket/inclusive-language": "error",
     "socket/max-file-lines": "error",
@@ -81,11 +38,13 @@
     "socket/prefer-cached-for-loop": "error",
     "socket/prefer-ellipsis-char": "error",
     "socket/prefer-env-as-boolean": "error",
+    "socket/prefer-error-message": "error",
     "socket/prefer-exists-sync": "error",
     "socket/prefer-function-declaration": "error",
     "socket/prefer-node-builtin-imports": "error",
     "socket/prefer-node-modules-dot-cache": "error",
     "socket/prefer-non-capturing-group": "error",
+    "socket/prefer-pure-call-form": "error",
     "socket/prefer-safe-delete": "error",
     "socket/prefer-separate-type-import": "error",
     "socket/prefer-spawn-over-execsync": "error",
@@ -100,12 +59,50 @@
     "socket/sort-set-args": "error",
     "socket/sort-source-methods": "error",
     "socket/use-fleet-canonical-api-token-getter": "error",
+    "eslint/curly": "error",
+    "eslint/no-await-in-loop": "off",
+    "eslint/no-console": "off",
+    "eslint/no-control-regex": "off",
+    "eslint/no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
+    "eslint/no-new": "error",
+    "eslint/no-underscore-dangle": "off",
+    "eslint/no-unmodified-loop-condition": "off",
+    "eslint/no-useless-catch": "off",
+    "eslint/no-proto": "error",
+    "eslint/no-shadow": "error",
+    "eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^$",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "ignoreRestSiblings": false
+      }
+    ],
+    "eslint/no-var": "error",
+    "eslint/prefer-const": "error",
+    "eslint/preserve-caught-error": "off",
+    "eslint/sort-imports": "off",
+    "import/no-cycle": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-self-import": "error",
+    "import/no-unassigned-import": "off",
     "typescript/array-type": [
       "error",
       {
         "default": "array-simple"
       }
     ],
+    "typescript/no-extraneous-class": "off",
     "typescript/consistent-type-assertions": [
       "error",
       {
@@ -117,7 +114,6 @@
     "typescript/no-duplicate-type-constituents": "error",
     "typescript/no-explicit-any": "error",
     "typescript/no-extra-non-null-assertion": "error",
-    "typescript/no-extraneous-class": "off",
     "typescript/no-misused-new": "error",
     "typescript/no-non-null-asserted-optional-chain": "off",
     "typescript/no-this-alias": [
@@ -132,10 +128,10 @@
     "typescript/triple-slash-reference": "error",
     "unicorn/consistent-function-scoping": "off",
     "unicorn/no-array-for-each": "off",
-    "unicorn/no-array-reverse": "error",
     "unicorn/no-array-sort": "error",
-    "unicorn/no-empty-file": "off",
     "unicorn/no-null": "off",
+    "unicorn/no-array-reverse": "error",
+    "unicorn/no-empty-file": "off",
     "unicorn/no-useless-fallback-in-spread": "off",
     "unicorn/prefer-node-protocol": "error",
     "unicorn/prefer-spread": "off"
@@ -163,12 +159,7 @@
       }
     },
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "rules": {
         "eslint/no-unused-vars": "off"
       }
@@ -198,6 +189,8 @@
     "**/.pnpm-store/**",
     "**/vendor/**",
     "**/wasm_exec.js",
+    "**/scripts/plugin-patches/**/*.files/**",
+    "**/scripts/plugin-patches/**/*.patch",
     "**/.config/lockstep.schema.json",
     "**/.config/markdownlint-rules/_shared/wheelhouse-self-skip.mjs",
     "**/.config/markdownlint-rules/socket-no-private-wheelhouse-leak.mjs",
@@ -207,6 +200,7 @@
     "**/.config/socket-wheelhouse-schema.json",
     "**/.config/taze.config.mts",
     "**/.config/tsconfig.base.json",
+    "**/.config/vitest.coverage.fleet.config.mts",
     "**/packages/build-infra/lib/release-checksums/consumer.mts",
     "**/packages/build-infra/lib/release-checksums/core.mts",
     "**/packages/build-infra/lib/release-checksums/producer.mts",
@@ -264,7 +258,10 @@
     "**/scripts/test/install-claude-plugins.test.mts",
     "**/scripts/test/install-git-hooks.test.mts",
     "**/scripts/update.mts",
+    "**/scripts/util/multi-package-publish.mts",
+    "**/scripts/util/pack-app-triplets.mts",
     "**/scripts/util/run-command.mts",
+    "**/scripts/util/source-allowlist.mts",
     "**/scripts/validate-bundle-deps.mts",
     "**/scripts/validate-config-paths.mts",
     "**/scripts/validate-file-size.mts",
