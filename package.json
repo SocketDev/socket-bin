@@ -35,6 +35,7 @@
     "ci:local": "agent-ci run --all"
   },
   "devDependencies": {
+    "@redwoodjs/agent-ci": "catalog:",
     "@sinclair/typebox": "catalog:",
     "@socketregistry/packageurl-js": "catalog:",
     "@socketregistry/packageurl-js-stable": "catalog:",
