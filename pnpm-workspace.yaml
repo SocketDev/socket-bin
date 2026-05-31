@@ -47,6 +47,7 @@ enablePrePostScripts: true
 # in the default `catalog:` block above. This defeats accidental
 # local-checkout resolution when a sibling repo is on disk.
 overrides:
+  # Fleet-canonical overrides (managed by socket-wheelhouse sync; do not edit).
   '@socketregistry/packageurl-js': 'catalog:'
   '@socketsecurity/lib': 'catalog:'
   '@socketsecurity/registry': 'catalog:'
