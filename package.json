@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "description": "SEA-packed binaries for @socketbin/* packages. Downloads prebuilt artifacts from socket-btm GH Releases, verifies checksums, publishes to npm.",
+  "homepage": "https://github.com/SocketDev/socket-bin",
   "license": "MIT",
-  "type": "module",
-  "packageManager": "pnpm@11.4.0",
-  "engines": {
-    "node": ">=18.20.8",
-    "pnpm": ">=11.4.0"
+  "author": {
+    "name": "Socket Inc",
+    "email": "eng@socket.dev",
+    "url": "https://socket.dev"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SocketDev/socket-bin.git"
+  },
+  "type": "module",
   "scripts": {
     "build": "echo 'no build — publish-only repo'",
     "check": "node scripts/check.mts",
@@ -17,8 +22,8 @@
     "clean": "node scripts/clean.mts",
     "cover": "COVERAGE=true pnpm exec vitest run --coverage --config .config/vitest.config.mts",
     "fix": "node scripts/fix.mts",
-    "format": "oxfmt -c .config/oxfmtrc.json --write .",
-    "format:check": "oxfmt -c .config/oxfmtrc.json --check .",
+    "format": "oxfmt -c .config/fleet/oxfmtrc.json --write .",
+    "format:check": "oxfmt -c .config/fleet/oxfmtrc.json --check .",
     "lint": "node scripts/lint.mts",
     "prepare": "node scripts/install-git-hooks.mts",
     "publish": "node scripts/publish.mts",
@@ -51,16 +56,11 @@
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "author": {
-    "name": "Socket Inc",
-    "email": "eng@socket.dev",
-    "url": "https://socket.dev"
+  "engines": {
+    "node": ">=18.20.8",
+    "pnpm": ">=11.4.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SocketDev/socket-bin.git"
-  },
-  "homepage": "https://github.com/SocketDev/socket-bin",
+  "packageManager": "pnpm@11.4.0",
   "allowScripts": {
     "cpu-features": false,
     "esbuild": true,
