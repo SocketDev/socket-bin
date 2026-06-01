@@ -18,9 +18,6 @@ catalogs:
     '@socketsecurity/lib-stable':
       specifier: npm:@socketsecurity/lib@6.0.5
       version: 6.0.5
-    '@socketsecurity/sdk-stable':
-      specifier: npm:@socketsecurity/sdk@4.0.1
-      version: 4.0.1
     '@types/node':
       specifier: 24.9.2
       version: 24.9.2
@@ -51,6 +48,7 @@ overrides:
   '@socketsecurity/lib': 6.0.5
   '@socketsecurity/registry': 2.0.2
   '@socketsecurity/sdk': 4.0.1
+  uuid: 11.1.1
 
 importers:
 
@@ -101,613 +99,6 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.0.3(@types/node@24.9.2)(jiti@2.7.0)(yaml@2.9.0)
-
-  .claude/hooks/actionlint-on-workflow-edit:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/ask-suppression-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/auth-rotation-reminder:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/check-new-deps:
-    dependencies:
-      '@socketregistry/packageurl-js-stable':
-        specifier: 'catalog:'
-        version: '@socketregistry/packageurl-js@1.4.2'
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-      '@socketsecurity/sdk-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/sdk@4.0.1'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/claude-md-section-size-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/claude-md-size-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/codex-no-write-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/comment-tone-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/commit-author-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/commit-message-format-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/commit-pr-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/compound-lessons-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/concurrent-cargo-build-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/consumer-grep-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/cross-repo-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/default-branch-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/dirty-worktree-on-stop-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/dont-blame-user-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/dont-stop-mid-queue-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/drift-check-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/enterprise-push-property-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/error-message-quality-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/excuse-detector:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/extension-build-current-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/file-size-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/follow-direct-imperative-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/gh-token-hygiene-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/gitmodules-comment-guard: {}
-
-  .claude/hooks/identifying-users-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/immutable-release-pattern-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/inline-script-defer-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/judgment-reminder:
-    dependencies:
-      compromise:
-        specifier: 14.15.1
-        version: 14.15.1
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/lock-step-ref-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/logger-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/markdown-filename-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/marketplace-comment-guard: {}
-
-  .claude/hooks/minify-mcp-output: {}
-
-  .claude/hooks/minimum-release-age-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/new-hook-claude-md-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-blind-keychain-read-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-disable-lint-rule-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-empty-commit-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-experimental-strip-types-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-external-issue-ref-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-file-scope-oxlint-disable-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-fleet-fork-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-meta-comments-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-non-fleet-push-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-orphaned-staging:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-package-json-pnpm-overrides-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-revert-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-structured-clone-prefer-json-guard: {}
-
-  .claude/hooks/no-token-in-dotenv-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/no-underscore-identifier-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/node-modules-staging-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/overeager-staging-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/parallel-agent-edit-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/parallel-agent-on-stop-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/parallel-agent-staging-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/path-guard: {}
-
-  .claude/hooks/path-regex-normalize-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/paths-mts-inherit-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/perfectionist-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/plan-location-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/plan-review-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/plugin-patch-format-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/pointer-comment-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/pr-vs-push-default-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/prefer-rebase-over-revert-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/private-name-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/public-surface-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/pull-request-target-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/readme-fleet-shape-guard:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/release-workflow-guard:
-    devDependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/scan-label-in-commit-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/setup-basics-tools:
-    devDependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/setup-claude-scanners:
-    devDependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/setup-firewall:
-    devDependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/setup-misc-tools:
-    devDependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/setup-security-tools:
-    dependencies:
-      '@sinclair/typebox':
-        specifier: 'catalog:'
-        version: 0.34.49
-      '@socketregistry/packageurl-js-stable':
-        specifier: 'catalog:'
-        version: '@socketregistry/packageurl-js@1.4.2'
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-
-  .claude/hooks/setup-signing:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/soak-exclude-date-annotation-guard: {}
-
-  .claude/hooks/socket-token-minifier-start:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-
-  .claude/hooks/squash-history-reminder:
-    dependencies:
-      '@socketsecurity/lib-stable':
-        specifier: 'catalog:'
-        version: '@socketsecurity/lib@6.0.5(typescript@5.9.2)'
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/stale-process-sweeper: {}
-
-  .claude/hooks/sweep-ds-store:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/token-guard: {}
-
-  .claude/hooks/trust-downgrade-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/variant-analysis-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/verify-rendered-output-before-commit-reminder:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/version-bump-order-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/vitest-include-vs-node-test-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
-
-  .claude/hooks/workflow-uses-comment-guard: {}
-
-  .claude/hooks/workflow-yaml-multiline-body-guard:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.9.2
 
   packages/build-infra:
     dependencies:
@@ -1367,10 +758,6 @@ packages:
       typescript:
         optional: true
 
-  '@socketsecurity/sdk@4.0.1':
-    resolution: {integrity: sha512-fe3DQp2dFwhc0G6Za36GIMSV+QaPAP5L96K3ZOtywt9nhbwxc9IQwqzdOVztdn5Rbez3t9EHU9Esj24/hWdP0g==}
-    engines: {node: '>=18.20.8', pnpm: '>=11.0.0-rc.0'}
-
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -1567,10 +954,6 @@ packages:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
-  compromise@14.15.1:
-    resolution: {integrity: sha512-9F3UkUaEU1PPz2fgStkE/TI4tk++0wHxS8xfWq9PQWL/v28dy8bEcPVVSLh3dISIRD7PEhJ8YTzHRKF8y9tnLA==}
-    engines: {node: '>=12.0.0'}
-
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
     engines: {node: '>= 0.6'}
@@ -1637,10 +1020,6 @@ packages:
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
-
-  efrt@2.7.0:
-    resolution: {integrity: sha512-/RInbCy1d4P6Zdfa+TMVsf/ufZVotat5hCw3QXmWtjU+3pFEOvOQ7ibo3aIxyCJw2leIeAMjmPj+1SLJiCpdrQ==}
-    engines: {node: '>=12.0.0'}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -1750,10 +1129,6 @@ packages:
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
-
-  grad-school@0.0.5:
-    resolution: {integrity: sha512-rXunEHF9M9EkMydTBux7+IryYXEZinRk6g8OBOGDBzo/qWJjhTxy86i5q7lQYpCLHN8Sqv1XX3OIOc7ka2gtvQ==}
-    engines: {node: '>=8.0.0'}
 
   has-symbols@1.1.0:
     resolution: {integrity: sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==}
@@ -2057,9 +1432,6 @@ packages:
     resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}
     engines: {node: '>=8'}
 
-  suffix-thumb@5.0.2:
-    resolution: {integrity: sha512-I5PWXAFKx3FYnI9a+dQMWNqTxoRt6vdBdb0O+BJ1sxXCWtSoQCusc13E58f+9p4MYx/qCnEMkD5jac6K2j3dgA==}
-
   tar-fs@2.1.4:
     resolution: {integrity: sha512-mDAjwmZdh7LTT6pNleZ05Yt65HC3E+NiQzl672vQG38jIrehtJk/J3mNwIg+vShQPcLF/LV7CMnDW6vjj6sfYQ==}
 
@@ -2138,9 +1510,8 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   vite@7.3.3:
@@ -2636,8 +2007,6 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
-  '@socketsecurity/sdk@4.0.1': {}
-
   '@standard-schema/spec@1.1.0': {}
 
   '@types/chai@5.2.3':
@@ -2836,12 +2205,6 @@ snapshots:
 
   commander@13.1.0: {}
 
-  compromise@14.15.1:
-    dependencies:
-      efrt: 2.7.0
-      grad-school: 0.0.5
-      suffix-thumb: 5.0.2
-
   content-type@1.0.5: {}
 
   content-type@2.0.0: {}
@@ -2889,7 +2252,7 @@ snapshots:
       docker-modem: 5.0.7
       protobufjs: 7.6.1
       tar-fs: 2.1.4
-      uuid: 10.0.0
+      uuid: 11.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -2920,8 +2283,6 @@ snapshots:
       - encoding
 
   ee-first@1.1.1: {}
-
-  efrt@2.7.0: {}
 
   emoji-regex@8.0.0: {}
 
@@ -3050,8 +2411,6 @@ snapshots:
       path-scurry: 2.0.2
 
   gopd@1.2.0: {}
-
-  grad-school@0.0.5: {}
 
   has-symbols@1.1.0: {}
 
@@ -3399,8 +2758,6 @@ snapshots:
     dependencies:
       ansi-regex: 5.0.1
 
-  suffix-thumb@5.0.2: {}
-
   tar-fs@2.1.4:
     dependencies:
       chownr: 1.1.4
@@ -3487,7 +2844,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  uuid@10.0.0: {}
+  uuid@11.1.1: {}
 
   vite@7.3.3(@types/node@24.9.2)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
