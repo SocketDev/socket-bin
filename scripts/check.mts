@@ -11,7 +11,7 @@
 
 // prefer-async-spawn: sync-required — top-level CLI runner; entire
 // flow is sequential gate-running with exit-code aggregation.
-import { spawnSync } from '@socketsecurity/lib-stable/spawn'
+import { spawnSync } from '@socketsecurity/lib-stable/process/spawn/child'
 import process from 'node:process'
 
 const args = process.argv.slice(2)
