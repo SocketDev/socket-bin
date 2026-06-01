@@ -38,7 +38,7 @@ catalog:
   'shell-quote': 1.8.4
   taze: 19.9.2
   typescript: 5.9.2
-  vitest: 4.0.3
+  vitest: 4.1.0
 enablePrePostScripts: true
 
 # Force every consumer of Socket's own packages to resolve through the
