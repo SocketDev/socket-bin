@@ -116,7 +116,7 @@ function filterLintable(files: string[]): string[] {
 const DOGFOOD_LINT_PATHS = ['.config/oxlint-plugin', 'template']
 
 function runAll(): number {
-  log('Formatting all files...')
+  log('Formatting all files…')
   // spawnSync with array args, no shell interpolation. Matches the
   // socket/prefer-spawn-over-execsync rule: shell-string execSync is
   // banned because every interpolated value is a potential injection
@@ -135,7 +135,7 @@ function runAll(): number {
   if (fmtRes.status !== 0) {
     return 1
   }
-  log('Running oxlint on all files...')
+  log('Running oxlint on all files…')
   const oxlintArgs = ['exec', 'oxlint', '-c', '.config/oxlintrc.json']
   if (fix) {
     oxlintArgs.push('--fix')
@@ -160,7 +160,7 @@ function runAll(): number {
   // to opt in.
   if (process.env['LINT_DOGFOOD'] === '1') {
     if (!quiet) {
-      logger.log('Running oxlint on wheelhouse-self dogfood paths...')
+      logger.log('Running oxlint on wheelhouse-self dogfood paths…')
     }
     for (let i = 0, { length } = DOGFOOD_LINT_PATHS; i < length; i += 1) {
       const dogfoodPath = DOGFOOD_LINT_PATHS[i]!
