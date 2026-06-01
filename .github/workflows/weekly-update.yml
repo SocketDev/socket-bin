@@ -25,7 +25,7 @@ permissions:
 
 jobs:
   weekly-update:
-    uses: SocketDev/socket-registry/.github/workflows/weekly-update.yml@c291a14196d088970c0453e905b40969b11bf193 # main (2026-05-25)
+    uses: SocketDev/socket-registry/.github/workflows/weekly-update.yml@bb4bb872b58d7c97f828caea595ff534b78c507b # main (2026-05-25)
     with:
       # Set to 'true' when the repo tracks submodules.
       checkout-submodules: 'false'
