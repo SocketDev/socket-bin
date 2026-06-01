@@ -30,32 +30,32 @@
       "notes": [
         "Required: yes",
         "Bootstrap locally via `corepack enable pnpm` (the version resolves from package.json's packageManager field)",
-        "CI downloads + sha256-verifies the pinned tarball directly"
+        "CI downloads + integrity-verifies the pinned tarball directly"
       ],
-      "checksums": {
+      "platforms": {
         "darwin-arm64": {
           "asset": "pnpm-darwin-arm64.tar.gz",
-          "sha256": "3620a0fcaf81ecd3aaeccd5965919d90dbc913f4d07a96e11e7cafc2c785054b"
+          "integrity": "sha256-NiCg/K+B7NOq7M1ZZZGdkNvJE/TQepbhHnyvwseFBUs="
         },
         "darwin-x64": {
           "asset": "pnpm-darwin-x64.tar.gz",
-          "sha256": "1701748b75187f1333a9c616827943ff84ff46cc42becc156ff6864b9bd0f948"
+          "integrity": "sha256-FwF0i3UYfxMzqcYWgnlD/4T/RsxCvswVb/aGS5vQ+Ug="
         },
         "linux-arm64": {
           "asset": "pnpm-linux-arm64.tar.gz",
-          "sha256": "1e6d87ebfd7ff169966ff5b3ad71b780b883c68d3e59987df1096dfd8853df75"
+          "integrity": "sha256-Hm2H6/1/8WmWb/WzrXG3gLiDxo0+WZh98Qlt/YhT33U="
         },
         "linux-x64": {
           "asset": "pnpm-linux-x64.tar.gz",
-          "sha256": "9b44acc77ada40fc41b665fde1d57367a5ebec31bd4b1b00598daed195da3e17"
+          "integrity": "sha256-m0Ssx3raQPxBtmX94dVzZ6Xr7DG9SxsAWY2u0ZXaPhc="
         },
         "win-arm64": {
           "asset": "pnpm-win32-arm64.zip",
-          "sha256": "0746be8e98ca183078d0747559f0cbbd30a13a53eb177f67474eb3c52dc21bc8"
+          "integrity": "sha256-B0a+jpjKGDB40HR1WfDLvTChOlPrF39nR06zxS3CG8g="
         },
         "win-x64": {
           "asset": "pnpm-win32-x64.zip",
-          "sha256": "581e222e622cd0cc4f0ac5f85dd0db76b65117e3b17507979d89e63fdc68edca"
+          "integrity": "sha256-WB4iLmIs0MxPCsX4XdDbdrZRF+OxdQeXnYnmP9xo7co="
         }
       }
     },
@@ -75,28 +75,28 @@
       "release": "asset",
       "notes": [
         "Required: CI (blocks merges on medium+ findings)",
-        "Installed by the setup-and-install composite; sha256-verified per platform"
+        "Installed by the setup-and-install composite; integrity-verified per platform"
       ],
-      "checksums": {
+      "platforms": {
         "darwin-arm64": {
           "asset": "zizmor-aarch64-apple-darwin.tar.gz",
-          "sha256": "2632561b974c69f952258c1ab4b7432d5c7f92e555704155c3ac28a2910bd717"
+          "integrity": "sha256-JjJWG5dMaflSJYwatLdDLVx/kuVVcEFVw6woopEL1xc="
         },
         "darwin-x64": {
           "asset": "zizmor-x86_64-apple-darwin.tar.gz",
-          "sha256": "89d5ed42081dd9d0433a10b7545fac42b35f1f030885c278b9712b32c66f2597"
+          "integrity": "sha256-idXtQggd2dBDOhC3VF+sQrNfHwMIhcJ4uXErMsZvJZc="
         },
         "linux-arm64": {
           "asset": "zizmor-aarch64-unknown-linux-gnu.tar.gz",
-          "sha256": "3725d7cd7102e4d70827186389f7d5930b6878232930d0a3eb058d7e5b47e658"
+          "integrity": "sha256-NyXXzXEC5NcIJxhjiffVkwtoeCMpMNCj6wWNfltH5lg="
         },
         "linux-x64": {
           "asset": "zizmor-x86_64-unknown-linux-gnu.tar.gz",
-          "sha256": "67a8df0a14352dd81882e14876653d097b99b0f4f6b6fe798edc0320cff27aff"
+          "integrity": "sha256-Z6jfChQ1LdgYguFIdmU9CXuZsPT2tv55jtwDIM/yev8="
         },
         "win-x64": {
           "asset": "zizmor-x86_64-pc-windows-msvc.zip",
-          "sha256": "33c2293ff02834720dd7cd8b47348aafb2e95a19bdc993c0ecaca9c804ade92a"
+          "integrity": "sha256-M8IpP/AoNHIN182LRzSKr7LpWhm9yZPA7KypyASt6So="
         }
       }
     },
@@ -109,26 +109,26 @@
         "Used when neither SOCKET_API_KEY (primary) nor SOCKET_API_TOKEN (forward-canonical) is set",
         "Shims npm/yarn/pnpm so every install call passes through the firewall"
       ],
-      "checksums": {
+      "platforms": {
         "darwin-arm64": {
           "asset": "sfw-free-macos-arm64",
-          "sha256": "248fb588e1e1a27e7192f7b079f739fc29a9de61f0bad7e90928363022dc5643"
+          "integrity": "sha256-JI+1iOHhon5xkvewefc5/Cmp3mHwutfpCSg2MCLcVkM="
         },
         "darwin-x64": {
           "asset": "sfw-free-macos-x86_64",
-          "sha256": "a5427d479d440f08e3789fa191ba57599be64997196daf42e67d964fec0382b4"
+          "integrity": "sha256-pUJ9R51EDwjjeJ+hkbpXWZvmSZcZba9C5n2WT+wDgrQ="
         },
         "linux-arm64": {
           "asset": "sfw-free-linux-arm64",
-          "sha256": "84a045e4e1bb320cc5c0d3929f02e53f199398b5be0637e8846d02d9ef0027b1"
+          "integrity": "sha256-hKBF5OG7MgzFwNOSnwLlPxmTmLW+BjfohG0C2e8AJ7E="
         },
         "linux-x64": {
           "asset": "sfw-free-linux-x86_64",
-          "sha256": "93e2d9dfa244b82a74e014dc26b1c6af18b4adec20f35254378943db5fe91411"
+          "integrity": "sha256-k+LZ36JEuCp04BTcJrHGrxi0rewg81JUN4lD21/pFBE="
         },
         "win-x64": {
           "asset": "sfw-free-windows-x86_64.exe",
-          "sha256": "6d333b4cac9d7c5712e2e99677ca634ac8a3020d550c6308312c60bea97f0a28"
+          "integrity": "sha256-bTM7TKydfFcS4umWd8pjSsijAg1VDGMIMSxgvql/Cig="
         }
       }
     },
@@ -141,26 +141,26 @@
         "Used when SOCKET_API_KEY is set (primary, universally supported). SOCKET_API_TOKEN is accepted as the forward-canonical secondary read.",
         "Same shims as sfw-free, broader ecosystem support (Ruby, .NET, Go on Linux)"
       ],
-      "checksums": {
+      "platforms": {
         "darwin-arm64": {
           "asset": "sfw-macos-arm64",
-          "sha256": "b1cdc3bdbd2a3161247bd5cc215eb3c44a90b87fe0b800a33889a14f61bb0d6d"
+          "integrity": "sha256-sc3Dvb0qMWEke9XMIV6zxEqQuH/guACjOImhT2G7DW0="
         },
         "darwin-x64": {
           "asset": "sfw-macos-x86_64",
-          "sha256": "da252d2a9a5d0edb271bb771e0d01b9cd6fa1635b6d765f61efd61edb6739f12"
+          "integrity": "sha256-2iUtKppdDtsnG7dx4NAbnNb6FjW212X2Hv1h7bZznxI="
         },
         "linux-arm64": {
           "asset": "sfw-linux-arm64",
-          "sha256": "c24a79c27e1a01a59b7a160c165930ae029816c72b141fcfcdb2f73e0774898a"
+          "integrity": "sha256-wkp5wn4aAaWbehYMFlkwrgKYFscrFB/PzbL3Pgd0iYo="
         },
         "linux-x64": {
           "asset": "sfw-linux-x86_64",
-          "sha256": "4482b52e6367bd4610519bfd57a104d5907ec87d5399142ed3bb3d222de1f33d"
+          "integrity": "sha256-RIK1LmNnvUYQUZv9V6EE1ZB+yH1TmRQu07s9Ii3h8z0="
         },
         "win-x64": {
           "asset": "sfw-windows-x86_64.exe",
-          "sha256": "e52ad806a1c41b440f04098eb1c7e407845f03f5740a6a79006ba6fd172056ec"
+          "integrity": "sha256-5SrYBqHEG0QPBAmOscfkB4RfA/V0Cmp5AGum/RcgVuw="
         }
       }
     }
