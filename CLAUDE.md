@@ -2,20 +2,7 @@
 
 **MANDATORY**: Act as principal-level engineer. Follow these guidelines exactly.
 
-This file has two parts:
-
-1. **📚 Wheelhouse Standards** — content between the `BEGIN FLEET-CANONICAL` /
-   `END FLEET-CANONICAL` markers below is the wheelhouse-owned ruleset, distributed byte-identical to every
-   fleet repo (`socket-*` and `ultrathink`). Wheelhouse controls; fleet
-   members consume. **Do not edit in a downstream (fleet) repo** —
-   edit `socket-wheelhouse/template/CLAUDE.md` and run
-   `node scripts/sync-scaffolding.mts --all --fix`.
-2. **🏗️ Project-Specific** — everything _outside_ the fleet markers is
-   owned by the host repo. Architecture, commands, build pipelines,
-   domain rules, etc. live there.
-
-The fleet block comes first because it changes most often (centrally
-curated), and it never interweaves with project content. Fleet-block size is capped at 40 KB (enforced by `.claude/hooks/claude-md-size-guard/`) — every byte costs N copies of fleet-wide in-context tokens. Individual `###` sections inside the fleet block are also capped at 8 body lines; past that, outsource detail to `docs/claude.md/fleet/<topic>.md` (enforced by `.claude/hooks/claude-md-section-size-guard/`).
+Two parts: **📚 Wheelhouse Standards** between the `BEGIN/END FLEET-CANONICAL` markers (byte-identical across the fleet; edit only in `socket-wheelhouse/template/CLAUDE.md` + cascade), and **🏗️ Project-Specific** after the markers. 40 KB whole-file cap (enforced by `.claude/hooks/claude-md-size-guard/`); per-`###` section cap 8 lines (enforced by `.claude/hooks/claude-md-section-size-guard/`).
 
 <!-- BEGIN FLEET-CANONICAL — sync via socket-wheelhouse/scripts/sync-scaffolding.mts. Do not edit downstream. -->
 
