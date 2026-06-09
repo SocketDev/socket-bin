@@ -2,9 +2,8 @@
   "$schema": "./socket-wheelhouse-schema.json",
   "schemaVersion": 1,
   "repoName": "socket-bin",
-  "layout": "monorepo",
-  "native": "consumer",
-  "kind": "single-package",
+  "repo": { "type": "monorepo" },
+  "build": { "from": "npm-registry", "type": "binary" },
   "hooks": {
     "enablePrePush": true,
     "enableCommitMsg": true,
