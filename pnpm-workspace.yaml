@@ -1,6 +1,9 @@
 packages:
   - packages/*
   - .claude/hooks/*
+  - '.config/oxlint-plugin'
+  - '.config/oxlint-plugin/fleet/*'
+  - '.config/oxlint-plugin/repo/*'
 allowBuilds:
   cpu-features: false
   esbuild: true
