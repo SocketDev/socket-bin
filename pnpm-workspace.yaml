@@ -36,6 +36,7 @@ catalog:
   oxfmt: 0.37.0
   oxlint: 1.52.0
   'playwright-core': 1.55.1
+  'regjsparser': 0.13.1
   'shell-quote': 1.8.4
   taze: 19.9.2
   typescript: 5.9.2
