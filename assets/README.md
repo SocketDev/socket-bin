@@ -8,21 +8,21 @@ marketplace icon, web page favicon, README banner, …).
 
 ### SVG variants
 
-| File                             | Layers               | Color                                      | viewBox             |
-| -------------------------------- | -------------------- | ------------------------------------------ | ------------------- |
-| `socket-icon.svg`                | 1 (bolt is a cutout) | `currentColor`                             | `0 0 181.41 240`    |
-| `socket-icon-square.svg`         | 1                    | `currentColor`                             | `-29.295 0 240 240` |
-| `socket-icon-shield.svg`         | 2 (shield + bolt)    | shield: `currentColor`, bolt: `#fff`       | `0 0 181.41 240`    |
-| `socket-icon-shield-square.svg`  | 2                    | shield: `currentColor`, bolt: `#fff`       | `-29.295 0 240 240` |
-| `socket-icon-brand.svg` ★        | 2                    | shield: pink→purple gradient, bolt: `#fff` | `0 0 181.41 240`    |
-| `socket-icon-brand-square.svg` ★ | 2                    | shield: pink→purple gradient, bolt: `#fff` | `-29.295 0 240 240` |
+| File                             | Layers               | Color                                         | viewBox                      |
+| -------------------------------- | -------------------- | --------------------------------------------- | ---------------------------- |
+| `socket-icon.svg`                | 1 (bolt is a cutout) | `currentColor`                                | `0 5.721 19.226 25.279`      |
+| `socket-icon-square.svg`         | 1                    | `currentColor`                                | `-3.027 5.721 25.279 25.279` |
+| `socket-icon-shield.svg`         | 2 (shield + bolt)    | shield: `currentColor`, bolt: `#fff`          | `0 5.721 19.226 25.279`      |
+| `socket-icon-shield-square.svg`  | 2                    | shield: `currentColor`, bolt: `#fff`          | `-3.027 5.721 25.279 25.279` |
+| `socket-icon-brand.svg` ★        | 2                    | shield: magenta→purple gradient, bolt: `#fff` | `0 5.721 19.226 25.279`      |
+| `socket-icon-brand-square.svg` ★ | 2                    | shield: magenta→purple gradient, bolt: `#fff` | `-3.027 5.721 25.279 25.279` |
 
-### Wordmark variants (shield + "Socket" text, 840×240 landscape)
+### Wordmark variants (shield + "Socket" text, 95×36 lockup)
 
-| File                    | Layers                                              | viewBox       |
-| ----------------------- | --------------------------------------------------- | ------------- |
-| `socket-logo-light.svg` | shield (gradient) + bolt (white) + text (slate-900) | `0 0 840 240` |
-| `socket-logo-dark.svg`  | shield (gradient) + bolt (white) + text (slate-50)  | `0 0 840 240` |
+| File                    | Layers                                                 | viewBox     |
+| ----------------------- | ------------------------------------------------------ | ----------- |
+| `socket-logo-light.svg` | shield (gradient) + bolt (white) + text (purple-black) | `0 0 95 36` |
+| `socket-logo-dark.svg`  | shield (gradient) + bolt (white) + text (brand cream)  | `0 0 95 36` |
 
 "Light" and "dark" refer to the **page background** the wordmark sits
 on — light wordmark has dark text (for use on white/light bg); dark
@@ -62,9 +62,9 @@ Wordmark (README hero banners, in light/dark pairs):
 
 | File                                | Width    | Use                       |
 | ----------------------------------- | -------- | ------------------------- |
-| `socket-logo-{light,dark}-420.png`  | 420×120  | README hero (1× display)  |
-| `socket-logo-{light,dark}-840.png`  | 840×240  | README hero (2× / Retina) |
-| `socket-logo-{light,dark}-1680.png` | 1680×480 | Press kit, hero images    |
+| `socket-logo-{light,dark}-420.png`  | 420×159  | README hero (1× display)  |
+| `socket-logo-{light,dark}-840.png`  | 840×318  | README hero (2× / Retina) |
+| `socket-logo-{light,dark}-1680.png` | 1680×637 | Press kit, hero images    |
 
 ## Variant semantics
 
@@ -77,10 +77,11 @@ and bolt paths. Override either via `[data-socket-layer="shield"]` /
 `[data-socket-layer="bolt"]` CSS selectors.
 
 The "brand" variants are the canonical fully-colored Socket mark —
-pink-to-purple horizontal gradient (`#f419b8` → `#9d5df8`) on the
-shield, white bolt. Pixel-sampled from the original purple gradient
-PNG. Use when you need a finished "Socket logo" with no theming work
-(README banner, marketplace icon, social cards).
+magenta-to-purple horizontal gradient (`#ff00aa` → `#8c50ff`) on the
+shield, white bolt. The same brand stops the fleet design tokens use
+(`--accent` / `--accent-purple`). Use when you need a finished "Socket
+logo" with no theming work (README banner, marketplace icon, social
+cards).
 
 The "logo" variants are the brand mark plus the "Socket" wordmark, in
 light/dark text variants. Use these when the visual context wants the
@@ -88,13 +89,15 @@ brand name (CLI hero banner, web header, OG card hero).
 
 ## Generator
 
-`scripts/gen-socket-icon.mts` (in socket-wheelhouse, **not** synced
+`scripts/repo/gen-socket-icon.mts` (in socket-wheelhouse, **not** synced
 to adopting repos) writes all variants — SVGs and rasterized PNGs.
 Adopting repos consume the produced files via sync-scaffolding without
 needing the generator or its deps installed.
 
 The generator depends on `@resvg/resvg-wasm` for SVG→PNG conversion —
 pure WebAssembly, no native binaries, deterministic across platforms.
+The SVGs are emitted from tight hand-built strings (no separate SVG
+optimizer).
 
 Run it after modifying source path data, gradient stops, or geometry.
 Run with `--check` in CI to detect drift.
@@ -106,10 +109,11 @@ pnpm run gen-socket-icon --check  # exit non-zero if any drift
 
 ## Source
 
-Extracted from the canonical Socket logo (the icon is the lightning-
-bolt mark on the left of the wordmark). Brand gradient stops sampled
-from the historical `socket-square.png` listing icon using
-ImageMagick. No external dependencies, no tracking.
+The canonical Socket brand lockup: the rounded shield with the lightning
+bolt, plus the "Socket" wordmark, used verbatim in its 95×36 coordinate
+space. The icon variants crop the viewBox to the shield's bounding box;
+the wordmark uses the full lockup. The brand gradient is the fleet's own
+magenta→purple. No external services, no tracking.
 
 ## Adopters
 
